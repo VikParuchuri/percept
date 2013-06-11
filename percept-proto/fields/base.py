@@ -1,8 +1,11 @@
 import json
+from utils.input import import_from_string
+from conf.base import settings
 
 class Field(object):
+    value = import_from_string(settings.DATASTORE)()
     def __init__(self, required_input = False):
-        self.value = None
+        self.required_input = required_input
 
     def __get__(self, obj, obj_type):
         return self.from_json(self.value)

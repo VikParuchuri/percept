@@ -1,10 +1,13 @@
 import csv
 
+from fields.base import Dict
+
 class BaseInput(object):
     """
     Base for the input class
     """
 
+    data = Dict()
     def __init__(self, stream):
         self.stream = stream
         self.data = None

@@ -2,3 +2,4 @@ argparse==1.2.1
 distribute==0.6.24
 wsgiref==0.1.2
 ipython==0.13.2
+path.py==4.1

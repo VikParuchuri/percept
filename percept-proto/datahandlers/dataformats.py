@@ -1,6 +1,8 @@
 from pandas import DataFrame
 import numpy as np
 
+from fields.base import Dict
+
 class DataFormats(object):
     csv = "csv"
     dataframe = "dataframe"
@@ -10,6 +12,8 @@ class BaseFormat(object):
     """
     Base class to reformat input data
     """
+    input_data = Dict()
+    data = Dict()
     def __init__(self, data, data_format):
         self.input_data = data
         self.input_format = data_format
