@@ -36,3 +36,6 @@ nosetests.xml
 
 #pycharm
 .idea
+
+#percept
+percept.log

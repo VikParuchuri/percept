@@ -1,12 +1,9 @@
 class BaseStore(object):
     """
-    Base class for dataformat
+    Base class for datastore
     """
     def __init__(self, data):
-        self.reformat_data(data)
-
-    def reformat_data(self, data):
-        pass
+        self.data = data
 
     def get_data_iter(self):
         i = 0
@@ -18,5 +15,8 @@ class BaseStore(object):
         return self.data
 
 class MemoryStore(BaseStore):
+    """
+    Stores everything in memory only
+    """
     pass
 
