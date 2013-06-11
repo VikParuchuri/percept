@@ -4,8 +4,10 @@ from conf.base import settings
 
 class Field(object):
     value = import_from_string(settings.DATASTORE)()
-    def __init__(self, required_input = False):
+    def __init__(self, required_input = False, value=None):
         self.required_input = required_input
+        if value is not None:
+            self.__set__(None, value)
 
     def __get__(self, obj, obj_type):
         if obj is None:
