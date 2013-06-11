@@ -1,5 +1,6 @@
 from pandas import DataFrame
 import numpy as np
+from utils.models import FieldModel
 
 from fields.base import Dict
 
@@ -8,19 +9,18 @@ class DataFormats(object):
     dataframe = "dataframe"
 
 
-class BaseFormat(object):
+class BaseFormat(FieldModel):
     """
     Base class to reformat input data
     """
-    input_data = Dict()
     data = Dict()
-    def __init__(self, data, data_format):
-        self.input_data = data
-        self.input_format = data_format
-        self.data = None
+    def __init__(self, input_data, data_format, **kwargs):
+        super(BaseFormat, self).__init__(**kwargs)
+        self.input_data = input_data
+        self.data_format = data_format
 
     def read_input(self):
-        data_converter = getattr(self, "from_" + self.input_format)
+        data_converter = getattr(self, "from_" + self.data_format)
         self.data = data_converter(self.input_data)
 
     def get_data(self, data_format):

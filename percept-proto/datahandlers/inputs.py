@@ -1,16 +1,17 @@
 import csv
 
 from fields.base import Dict
+from utils.models import FieldModel
 
-class BaseInput(object):
+class BaseInput(FieldModel):
     """
     Base for the input class
     """
 
     data = Dict()
-    def __init__(self, stream):
+    def __init__(self, stream, **kwargs):
+        super(BaseInput, self).__init__(**kwargs)
         self.stream = stream
-        self.data = None
 
     def read_input(self):
         """
