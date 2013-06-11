@@ -9,6 +9,13 @@ PATH_SETTINGS = ["REPO_PATH", "ENV_ROOT"]
 
 MODULE_VARIABLE = "PERCEPT_SETTINGS_MODULE"
 
+NAMESPACE = "percept"
+
+INSTALLED_APPS = [
+    'percept-proto.datahandlers',
+    'percept-proto.tasks'
+]
+
 DEFAULT_LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,

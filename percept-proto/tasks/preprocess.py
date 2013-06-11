@@ -1,10 +1,13 @@
 from base import Task
 from fields.base import List
 import numpy as np
+from conf.base import settings
+from utils.models import RegistryCategories
 
 class Normalize(Task):
     column_means = List()
     column_stdevs = List()
+    category = RegistryCategories.preprocessors
 
     def train(self, **kwargs):
         self.column_means = []

@@ -2,6 +2,8 @@ import csv
 
 from fields.base import Dict
 from utils.models import FieldModel
+from conf.base import settings
+from utils.models import RegistryCategories, DataFormats
 
 class BaseInput(FieldModel):
     """
@@ -9,6 +11,10 @@ class BaseInput(FieldModel):
     """
 
     data = Dict()
+    category = RegistryCategories.inputs
+    namespace = settings.NAMESPACE
+    input_format = ""
+
     def __init__(self, stream, **kwargs):
         super(BaseInput, self).__init__(**kwargs)
         self.stream = stream
@@ -29,6 +35,7 @@ class CSVInput(BaseInput):
     """
     Extends baseinput to read a csv file
     """
+    input_format = DataFormats.csv
 
     def read_input(self, has_header=True):
         """

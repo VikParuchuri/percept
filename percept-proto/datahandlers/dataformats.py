@@ -3,10 +3,8 @@ import numpy as np
 from utils.models import FieldModel
 
 from fields.base import Dict
-
-class DataFormats(object):
-    csv = "csv"
-    dataframe = "dataframe"
+from conf.base import settings
+from utils.models import RegistryCategories, DataFormats
 
 
 class BaseFormat(FieldModel):
@@ -14,6 +12,11 @@ class BaseFormat(FieldModel):
     Base class to reformat input data
     """
     data = Dict()
+    category = RegistryCategories.dataformats
+    namespace = settings.NAMESPACE
+    input_formats = []
+    output_formats = []
+
     def __init__(self, input_data, data_format, **kwargs):
         super(BaseFormat, self).__init__(**kwargs)
         self.input_data = input_data
@@ -31,6 +34,8 @@ class JSONFormat(BaseFormat):
     """
     Converts everything to a base json format, and then converts from that format to output formats, like a pandas dataframe
     """
+    input_formats = [DataFormats.csv]
+    output_formats = [DataFormats.dataframe]
     def from_csv(self):
         reformatted_data = []
         for (i,row) in enumerate(self.input_data):
