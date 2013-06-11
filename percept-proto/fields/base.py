@@ -8,6 +8,8 @@ class Field(object):
         self.required_input = required_input
 
     def __get__(self, obj, obj_type):
+        if obj is None:
+            return self
         return self.from_json(self.value)
 
     def __set__(self, obj, value):

@@ -6,6 +6,8 @@ class BaseStore(object):
         self.data = None
 
     def __get__(self, obj, obj_type):
+        if obj is None:
+            return self
         return self.data
 
     def __set__(self, obj, value):
