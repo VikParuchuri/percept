@@ -3,7 +3,7 @@ from utils.models import FieldModel
 from datahandlers.dataformats import DataFormats
 import logging
 from conf.base import settings
-from utils.models import RegistryCategories
+from utils.registry import RegistryCategories
 
 log = logging.getLogger(__name__)
 

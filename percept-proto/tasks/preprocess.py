@@ -2,7 +2,7 @@ from base import Task
 from fields.base import List
 import numpy as np
 from conf.base import settings
-from utils.models import RegistryCategories
+from utils.registry import RegistryCategories
 
 class Normalize(Task):
     column_means = List()

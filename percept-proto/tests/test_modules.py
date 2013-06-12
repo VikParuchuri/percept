@@ -6,7 +6,7 @@ TEST_DATA_PATH = os.path.abspath(os.path.join(TEST_PATH, "data"))
 os.environ["PERCEPT_SETTINGS_MODULE"] = "percept-proto.tests.test_settings"
 
 from conf.base import settings
-from utils.models import find_in_registry, RegistryCategories, registry
+from utils.registry import find_in_registry, RegistryCategories, registry
 from fields.base import Dict
 import unittest
 import logging

@@ -1,11 +1,10 @@
 import os
 import global_settings
-import importlib
 import sys
 from logging.config import dictConfig
-
 import logging
 log = logging.getLogger(__name__)
+from importlib import import_module
 
 class Settings(object):
     settings_list = None
@@ -21,7 +20,7 @@ class Settings(object):
             self.SETTINGS_MODULE = settings_module
 
             try:
-                mod = importlib.import_module(self.SETTINGS_MODULE)
+                mod = import_module(self.SETTINGS_MODULE)
             except ImportError:
                 error_message = "Could not import settings at {0}".format(self.SETTINGS_MODULE)
                 log.exception(error_message)
@@ -48,7 +47,6 @@ class Settings(object):
 
         self._initialize(settings_module)
         self._configure_logging()
-        self._load_modules()
 
     def __getattr__(self, name):
         if not self.configured:
@@ -65,13 +63,8 @@ class Settings(object):
             if self.LOGGING:
                 dictConfig(self.LOGGING)
 
-    def _load_modules(self):
-        from utils.models import import_task_modules
-        import_task_modules()
-
     @property
     def configured(self):
         return self.settings_list is not None
-
 
 settings = Settings()

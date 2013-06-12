@@ -4,7 +4,8 @@ from utils.models import FieldModel
 
 from fields.base import Dict
 from conf.base import settings
-from utils.models import RegistryCategories, DataFormats
+from utils.models import DataFormats
+from utils.registry import RegistryCategories
 
 
 class BaseFormat(FieldModel):

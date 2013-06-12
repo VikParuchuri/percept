@@ -3,7 +3,8 @@ import csv
 from fields.base import Dict
 from utils.models import FieldModel
 from conf.base import settings
-from utils.models import RegistryCategories, DataFormats
+from utils.models import DataFormats
+from utils.registry import RegistryCategories
 
 class BaseInput(FieldModel):
     """
