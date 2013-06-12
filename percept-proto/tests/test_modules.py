@@ -49,7 +49,7 @@ def create_input(cls):
         obj_list.append(obj)
     return obj_list
 
-class InputTest(unittest.TestCase, GenericTest):
+class InputTest(GenericTest):
     category = RegistryCategories.inputs
     namespace = settings.NAMESPACE
 
@@ -60,7 +60,12 @@ class InputTest(unittest.TestCase, GenericTest):
         for cls in self.cls:
                 obj_list = create_input(cls)
                 for obj in obj_list:
-                    assert isinstance(obj.data, list)
+                    yield isinstance(obj.data, list)
+
+def test_input():
+    input_test = InputTest()
+    input_test.setUp()
+    input_test.test_read()
 
 class FormatTest(unittest.TestCase, GenericTest):
     category = RegistryCategories.dataformats
@@ -70,8 +75,10 @@ class FormatTest(unittest.TestCase, GenericTest):
         self.generic_setup()
 
     def test_read(self):
-        for cls in self.cls:
+        input_test = InputTest()
+        for cls in input_test.cls:
             obj_list = create_input(cls)
+
 
 
 

@@ -5,6 +5,7 @@ from utils.models import FieldModel
 from fields.base import Dict
 from conf.base import settings
 from utils.models import RegistryCategories
+import re
 
 class DataFormats(object):
     csv = "csv"
@@ -18,16 +19,22 @@ class BaseFormat(FieldModel):
     data = Dict()
     category = RegistryCategories.dataformats
     namespace = settings.NAMESPACE
-    input_formats = []
-    output_formats = []
 
     def __init__(self, input_data, data_format, **kwargs):
         super(BaseFormat, self).__init__(**kwargs)
         self.input_data = input_data
         self.data_format = data_format
+        self.input_formats = []
+        self.output_formats = []
+        self.setup_formats()
 
-    def setup_input_formats(self):
-        pass
+    def setup_formats(self):
+        methods = self.get_methods()
+        for m in methods:
+            if m.startswith("from_"):
+                self.input_formats.append(re.sub("from_" , "",m))
+            elif m.startswith("to_"):
+                self.output_formats.append(re.sub("to_","",m))
 
     def read_input(self):
         data_converter = getattr(self, "from_" + self.data_format)

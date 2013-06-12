@@ -2,6 +2,7 @@ import inspect
 from conf.base import settings
 import logging
 from collections import namedtuple
+import inspect
 
 log = logging.getLogger(__name__)
 
@@ -56,3 +57,12 @@ class FieldModel(object):
         for key in self.fields:
             data_dict.update({key : getattr(self,key)})
         return data_dict
+
+    def get_methods(self):
+        method_tuples = inspect.getmembers(self.__class__)
+        methods = []
+        for m,s in method_tuples:
+            if not m.startswith("__"):
+                methods.append(m)
+        return methods
+
