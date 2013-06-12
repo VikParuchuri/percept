@@ -5,6 +5,8 @@ from utils.models import FieldModel
 from conf.base import settings
 from dataformats import DataFormats
 from utils.models import RegistryCategories
+from tests.framework import CSVInputTester
+import os
 
 class BaseInput(FieldModel):
     """
@@ -36,6 +38,8 @@ class CSVInput(BaseInput):
     Extends baseinput to read a csv file
     """
     input_format = DataFormats.csv
+    tester = CSVInputTester
+    test_cases = [{'stream' : os.path.abspath(os.path.join(settings.ENV_ROOT,'tests/data/csv/1.csv'))}]
 
     def read_input(self, stream, has_header=True):
         """

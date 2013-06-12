@@ -31,4 +31,3 @@ def find_in_registry(category = None, namespace = None, name = None):
     return None
 
 import_task_modules()
-

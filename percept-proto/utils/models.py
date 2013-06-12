@@ -6,6 +6,12 @@ import inspect
 
 log = logging.getLogger(__name__)
 
+def exists_in_registry(category, namespace, name):
+    selected_registry = [re for re in registry if re.category==category and re.namespace==namespace and re.name == name]
+    if len(selected_registry)>0:
+        return True
+    return False
+
 class RegistryCategories(object):
     base = "base"
     preprocessors = "preprocessors"
@@ -18,8 +24,10 @@ registry = []
 
 def register(cls):
     registry_entry = RegistryEntry(category = cls.category, namespace = cls.namespace, name = cls.name, cls=cls)
-    if registry_entry not in registry:
+    if registry_entry not in registry and not exists_in_registry(cls.category, cls.namespace, cls.name):
         registry.append(registry_entry)
+    else:
+        log.warn("Class {0} already in registry".format(cls))
 
 class MetaFieldModel(type):
     def __new__(cls, clsname, bases, attrs):

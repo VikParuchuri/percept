@@ -72,10 +72,7 @@ class JSONFormat(BaseFormat):
             for i in xrange(0,len(self.data)):
                 key_list.append(self.data[i][k])
             column_list.append(key_list)
-        log.info(column_list)
-        log.info(keys)
-        log.info(np.asarray(column_list))
-        return DataFrame(np.asarray(column_list), columns=keys)
+        return DataFrame(np.asarray(column_list).transpose(), columns=keys)
 
 
 
