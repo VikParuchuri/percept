@@ -6,6 +6,8 @@ from fields.base import Dict
 from conf.base import settings
 from utils.models import RegistryCategories
 import re
+import logging
+log = logging.getLogger(__name__)
 
 class DataFormats(object):
     csv = "csv"
@@ -20,10 +22,8 @@ class BaseFormat(FieldModel):
     category = RegistryCategories.dataformats
     namespace = settings.NAMESPACE
 
-    def __init__(self, input_data, data_format, **kwargs):
+    def __init__(self, **kwargs):
         super(BaseFormat, self).__init__(**kwargs)
-        self.input_data = input_data
-        self.data_format = data_format
         self.input_formats = []
         self.output_formats = []
         self.setup_formats()
@@ -36,23 +36,25 @@ class BaseFormat(FieldModel):
             elif m.startswith("to_"):
                 self.output_formats.append(re.sub("to_","",m))
 
-    def read_input(self):
-        data_converter = getattr(self, "from_" + self.data_format)
-        self.data = data_converter(self.input_data)
+    def read_input(self, input_data, data_format):
+        if data_format not in self.input_formats:
+            raise Exception("Input format {0} not available with this class. Available formats are {1}.".format(data_format, self.input_formats))
+        data_converter = getattr(self, "from_" + data_format)
+        self.data = data_converter(input_data)
 
     def get_data(self, data_format):
+        if data_format not in self.output_formats:
+            raise Exception("Output format {0} not available with this class. Available formats are {1}.".format(data_format, self.output_formats))
         data_converter = getattr(self, "to_" + data_format)
-        return data_converter(self.data)
+        return data_converter()
 
 class JSONFormat(BaseFormat):
     """
     Converts everything to a base json format, and then converts from that format to output formats, like a pandas dataframe
     """
-    input_formats = [DataFormats.csv]
-    output_formats = [DataFormats.dataframe]
-    def from_csv(self):
+    def from_csv(self, input_data):
         reformatted_data = []
-        for (i,row) in enumerate(self.input_data):
+        for (i,row) in enumerate(input_data):
             if i==0:
                 headers = row
             else:
@@ -70,6 +72,9 @@ class JSONFormat(BaseFormat):
             for i in xrange(0,len(self.data)):
                 key_list.append(self.data[i][k])
             column_list.append(key_list)
+        log.info(column_list)
+        log.info(keys)
+        log.info(np.asarray(column_list))
         return DataFrame(np.asarray(column_list), columns=keys)
 
 

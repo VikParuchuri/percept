@@ -44,8 +44,8 @@ def create_input(cls):
     dataloader = DataLoader(dataformat)
     datastreams = dataloader.get_streams()
     for stream in datastreams:
-        obj = cls(stream)
-        obj.read_input()
+        obj = cls()
+        obj.read_input(stream)
         obj_list.append(obj)
     return obj_list
 
@@ -76,8 +76,20 @@ class FormatTest(unittest.TestCase, GenericTest):
 
     def test_read(self):
         input_test = InputTest()
+        input_test.setUp()
         for cls in input_test.cls:
+            dataformat = cls.input_format
             obj_list = create_input(cls)
+            for cls in self.cls:
+                dataformatter = cls()
+                if dataformat in dataformatter.input_formats:
+                    for obj in obj_list:
+                        dataformatter.read_input(obj.get_data(), dataformat)
+                        for output_format in dataformatter.output_formats:
+                            data = dataformatter.get_data(output_format)
+
+
+
 
 
 

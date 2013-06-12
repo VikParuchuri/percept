@@ -16,11 +16,10 @@ class BaseInput(FieldModel):
     namespace = settings.NAMESPACE
     input_format = "none"
 
-    def __init__(self, stream, **kwargs):
+    def __init__(self, **kwargs):
         super(BaseInput, self).__init__(**kwargs)
-        self.stream = stream
 
-    def read_input(self):
+    def read_input(self, stream, **kwargs):
         """
         Reads the input in the specified format.  Overriden by specific input functions.
         """
@@ -38,7 +37,7 @@ class CSVInput(BaseInput):
     """
     input_format = DataFormats.csv
 
-    def read_input(self, has_header=True):
+    def read_input(self, stream, has_header=True):
         """
         input is any reader object that exposes the .read() interface
         for example:
@@ -46,7 +45,7 @@ class CSVInput(BaseInput):
         csv_input.read_input(open("csvfile.csv"))
         """
 
-        reader = csv.reader(self.stream)
+        reader = csv.reader(stream)
         csv_data = []
         for (i, row) in enumerate(reader):
             if i==0:
