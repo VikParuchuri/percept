@@ -12,6 +12,7 @@ class DataFormats(object):
 class MetaFieldModel(type):
     def __new__(cls, clsname, bases, attrs):
         newclass = super(cls, MetaFieldModel).__new__(cls, clsname, bases, attrs)
+        newclass.name = newclass.__name__.lower()
         register(newclass)
         return newclass
 

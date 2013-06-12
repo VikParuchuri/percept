@@ -2,6 +2,8 @@ import pkgutil
 from importlib import import_module
 from collections import namedtuple
 from conf.base import settings
+import logging
+log = logging.getLogger(__name__)
 
 class RegistryCategories(object):
     base = "base"
@@ -25,7 +27,7 @@ def find_in_registry(category = None, namespace = None, name = None):
     if name is not None:
         selected_registry = [re for re in selected_registry if re.name==name]
     if len(selected_registry)>0:
-        return selected_registry
+        return [sr.cls for sr in selected_registry]
 
     return None
 

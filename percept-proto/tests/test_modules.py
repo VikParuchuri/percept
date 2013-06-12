@@ -10,13 +10,14 @@ from utils.registry import find_in_registry, RegistryCategories, registry
 from fields.base import Dict
 import unittest
 import logging
+from pandas import DataFrame
 
 log = logging.getLogger(__name__)
 
 class GenericTest(object):
-    name = ""
-    category = ""
-    namespace = ""
+    name = None
+    category = None
+    namespace = None
 
     def generic_setup(self):
         self.cls = find_in_registry(category=self.category, namespace = self.namespace, name = self.name)
@@ -40,7 +41,6 @@ class InputTest(unittest.TestCase, GenericTest):
     namespace = settings.NAMESPACE
 
     def setUp(self):
-        log.info(registry)
         self.generic_setup()
 
     def test_read(self):
@@ -50,7 +50,8 @@ class InputTest(unittest.TestCase, GenericTest):
             datastreams = dataloader.get_streams()
             for stream in datastreams:
                 obj = cls(stream)
-                assert isinstance(obj.data, Dict)
+                log.info(obj.data)
+                assert isinstance(obj.data, dict)
 
 
 
