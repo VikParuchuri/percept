@@ -1,13 +1,24 @@
 import inspect
 from conf.base import settings
 import logging
-from utils.registry import RegistryCategories, register
+from collections import namedtuple
 
 log = logging.getLogger(__name__)
 
-class DataFormats(object):
-    csv = "csv"
-    dataframe = "dataframe"
+class RegistryCategories(object):
+    base = "base"
+    preprocessors = "preprocessors"
+    inputs = "inputs"
+    dataformats = "dataformats"
+
+RegistryEntry = namedtuple('RegistryEntry', ['category', 'namespace', 'name', 'cls'], verbose=True)
+
+registry = []
+
+def register(cls):
+    registry_entry = RegistryEntry(category = cls.category, namespace = cls.namespace, name = cls.name, cls=cls)
+    if registry_entry not in registry:
+        registry.append(registry_entry)
 
 class MetaFieldModel(type):
     def __new__(cls, clsname, bases, attrs):

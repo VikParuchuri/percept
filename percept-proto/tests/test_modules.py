@@ -6,11 +6,11 @@ TEST_DATA_PATH = os.path.abspath(os.path.join(TEST_PATH, "data"))
 os.environ["PERCEPT_SETTINGS_MODULE"] = "percept-proto.tests.test_settings"
 
 from conf.base import settings
-from utils.registry import find_in_registry, RegistryCategories, registry
-from fields.base import Dict
+from utils.models import RegistryCategories
+from utils.registry import find_in_registry, registry
+import fields.base
 import unittest
 import logging
-from pandas import DataFrame
 
 log = logging.getLogger(__name__)
 
@@ -26,15 +26,28 @@ class GenericTest(object):
 
 class DataLoader(object):
     def __init__(self, dataformat):
+        self.filenames = []
         datapath = os.path.abspath(os.path.join(TEST_DATA_PATH, dataformat))
-        filenames = os.listdir(datapath)
-        self.filenames = [os.path.abspath(os.path.join(datapath,f)) for f in filenames if os.path.isfile(os.path.join(datapath,f))]
+        if os.path.isdir(datapath):
+            filenames = os.listdir(datapath)
+            self.filenames = [os.path.abspath(os.path.join(datapath,f)) for f in filenames if os.path.isfile(os.path.join(datapath,f))]
 
     def get_streams(self):
         stream_list = []
         for f in self.filenames:
             stream_list.append(open(f))
         return stream_list
+
+def create_input(cls):
+    obj_list = []
+    dataformat = cls.input_format
+    dataloader = DataLoader(dataformat)
+    datastreams = dataloader.get_streams()
+    for stream in datastreams:
+        obj = cls(stream)
+        obj.read_input()
+        obj_list.append(obj)
+    return obj_list
 
 class InputTest(unittest.TestCase, GenericTest):
     category = RegistryCategories.inputs
@@ -45,13 +58,20 @@ class InputTest(unittest.TestCase, GenericTest):
 
     def test_read(self):
         for cls in self.cls:
-            dataformat = cls.input_format
-            dataloader = DataLoader(dataformat)
-            datastreams = dataloader.get_streams()
-            for stream in datastreams:
-                obj = cls(stream)
-                log.info(obj.data)
-                assert isinstance(obj.data, dict)
+                obj_list = create_input(cls)
+                for obj in obj_list:
+                    assert isinstance(obj.data, list)
+
+class FormatTest(unittest.TestCase, GenericTest):
+    category = RegistryCategories.dataformats
+    namespace = settings.NAMESPACE
+
+    def setUp(self):
+        self.generic_setup()
+
+    def test_read(self):
+        for cls in self.cls:
+            obj_list = create_input(cls)
 
 
 

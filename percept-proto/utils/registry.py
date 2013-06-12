@@ -1,22 +1,21 @@
+import conf.base
 import pkgutil
 from importlib import import_module
-from collections import namedtuple
-from conf.base import settings
+from utils.models import registry
 import logging
 log = logging.getLogger(__name__)
 
-class RegistryCategories(object):
-    base = "base"
-    preprocessors = "preprocessors"
-    inputs = "inputs"
-    dataformats = "dataformats"
-
-RegistryEntry = namedtuple('RegistryEntry', ['category', 'namespace', 'name', 'cls'], verbose=True)
-
-def register(cls):
-    registry_entry = RegistryEntry(category = cls.category, namespace = cls.namespace, name = cls.name, cls=cls)
-    if registry_entry not in registry:
-        registry.append(registry_entry)
+def import_task_modules():
+    top_level_modules = conf.base.settings.INSTALLED_APPS
+    module_names = []
+    for module in top_level_modules:
+        mod = import_module(module)
+        for loader, module_name, is_pkg in  pkgutil.walk_packages(mod.__path__):
+            if not module_name.startswith("__"):
+                submod_name = "{0}.{1}".format(module,module_name)
+                module_names.append(submod_name)
+    modules = map(import_module, module_names)
+    return modules
 
 def find_in_registry(category = None, namespace = None, name = None):
     selected_registry = registry
@@ -31,16 +30,5 @@ def find_in_registry(category = None, namespace = None, name = None):
 
     return None
 
-def import_task_modules(installed_apps):
-    top_level_modules = installed_apps
-    modules = []
-    for module in top_level_modules:
-        mod = import_module(module)
-        for loader, module_name, is_pkg in  pkgutil.walk_packages(mod.__path__):
-            if not module_name.startswith("__"):
-                module = loader.find_module(module_name).load_module(module_name)
-                modules.append(module)
-    return modules
+import_task_modules()
 
-registry = []
-import_task_modules(settings.INSTALLED_APPS)

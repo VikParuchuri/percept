@@ -1,6 +1,9 @@
 import json
 from utils.input import import_from_string
 from conf.base import settings
+import logging
+
+log = logging.getLogger(__name__)
 
 class Field(object):
     value = import_from_string(settings.DATASTORE)()

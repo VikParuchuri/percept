@@ -3,8 +3,8 @@ import csv
 from fields.base import Dict
 from utils.models import FieldModel
 from conf.base import settings
-from utils.models import DataFormats
-from utils.registry import RegistryCategories
+from dataformats import DataFormats
+from utils.models import RegistryCategories
 
 class BaseInput(FieldModel):
     """
@@ -14,7 +14,7 @@ class BaseInput(FieldModel):
     data = Dict()
     category = RegistryCategories.inputs
     namespace = settings.NAMESPACE
-    input_format = ""
+    input_format = "none"
 
     def __init__(self, stream, **kwargs):
         super(BaseInput, self).__init__(**kwargs)
@@ -50,7 +50,7 @@ class CSVInput(BaseInput):
         csv_data = []
         for (i, row) in enumerate(reader):
             if i==0:
-                if not has_header():
+                if not has_header:
                     csv_data.append([str(i) for i in xrange(0,len(row))])
             csv_data.append(row)
         self.data = csv_data

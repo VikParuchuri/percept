@@ -1,10 +1,10 @@
 from fields.base import Dict, List, Int, Boolean, String
 from utils.models import FieldModel
 from datahandlers.dataformats import DataFormats
-import logging
 from conf.base import settings
-from utils.registry import RegistryCategories
+from utils.models import RegistryCategories
 
+import logging
 log = logging.getLogger(__name__)
 
 class Task(FieldModel):

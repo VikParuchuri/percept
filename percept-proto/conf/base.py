@@ -2,9 +2,10 @@ import os
 import global_settings
 import sys
 from logging.config import dictConfig
+from importlib import import_module
+
 import logging
 log = logging.getLogger(__name__)
-from importlib import import_module
 
 class Settings(object):
     settings_list = None
@@ -43,7 +44,7 @@ class Settings(object):
             settings_module = os.environ[global_settings.MODULE_VARIABLE]
         except KeyError:
             error_message = "Settings not properly configured.  Cannot find the environment variable {0}".format(global_settings.MODULE_VARIABLE)
-            print error_message
+            log.exception(error_message)
 
         self._initialize(settings_module)
         self._configure_logging()

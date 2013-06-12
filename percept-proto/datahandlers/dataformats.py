@@ -4,8 +4,11 @@ from utils.models import FieldModel
 
 from fields.base import Dict
 from conf.base import settings
-from utils.models import DataFormats
-from utils.registry import RegistryCategories
+from utils.models import RegistryCategories
+
+class DataFormats(object):
+    csv = "csv"
+    dataframe = "dataframe"
 
 
 class BaseFormat(FieldModel):
@@ -22,6 +25,9 @@ class BaseFormat(FieldModel):
         super(BaseFormat, self).__init__(**kwargs)
         self.input_data = input_data
         self.data_format = data_format
+
+    def setup_input_formats(self):
+        pass
 
     def read_input(self):
         data_converter = getattr(self, "from_" + self.data_format)
