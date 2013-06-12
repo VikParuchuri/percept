@@ -5,6 +5,8 @@ from utils.models import FieldModel
 from fields.base import Dict
 from conf.base import settings
 from utils.models import RegistryCategories
+from tests.framework import JSONFormatTester
+import os
 import re
 import logging
 log = logging.getLogger(__name__)
@@ -52,6 +54,9 @@ class JSONFormat(BaseFormat):
     """
     Converts everything to a base json format, and then converts from that format to output formats, like a pandas dataframe
     """
+    tester = JSONFormatTester
+    test_cases = [{'stream' : os.path.abspath(os.path.join(settings.ENV_ROOT,'tests/data/csv/1.csv')), 'dataformat' : DataFormats.csv}]
+
     def from_csv(self, input_data):
         reformatted_data = []
         for (i,row) in enumerate(input_data):
