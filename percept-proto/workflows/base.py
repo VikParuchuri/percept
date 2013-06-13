@@ -1,12 +1,12 @@
-from utils.input import import_from_string
+from utils.input import import_from_string, DataFormats
 from collections import namedtuple
 
 TrainedDependency = namedtuple('DependencyResult', ['category', 'namespace', 'name', 'inst'], verbose=True)
 
 class BaseWorkflow(object):
     runner = import_from_string(settings.RUNNER)()
-    input_file = []
-    input_format = ""
+    input_file = ""
+    input_format = DataFormats.csv
     tasks = []
 
     def __init__(self, **kwargs):
@@ -52,6 +52,19 @@ class BaseWorkflow(object):
         for task_inst in self.trained_tasks:
             results.append(self.execute_predict_task(task_inst, **kwargs))
         return results
+
+    def read_input(self, input_cls, **kwargs):
+        input_data = open(self.input_file)
+        input_inst = input_cls()
+        input_inst.read_input(input_data)
+        return input_inst.get_data()
+
+    def reformat_input(self, input_data, input_format, output_format, **kwargs):
+        needed_formats = []
+        for task_cls in self.tasks:
+            needed_formats.append(task_cls.data_format)
+        needed_formats = list(set(needed_formats))
+
 
 class NaiveWorkflow(BaseWorkflow):
     pass

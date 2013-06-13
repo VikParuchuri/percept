@@ -32,7 +32,7 @@ class JSONFormatTester(Tester):
     def test(self, **kwargs):
         super(JSONFormatTester, self).test(**kwargs)
         stream = open(kwargs.get('stream'))
-        dataformat = kwargs.get('format')
+        dataformat = kwargs.get('dataformat')
         inst = self.cls()
         selected_registry = find_in_registry(category = RegistryCategories.inputs)
         selected_input_registry = [i for i in selected_registry if i.input_format==dataformat]
@@ -42,4 +42,4 @@ class JSONFormatTester(Tester):
             inst.read_input(input_inst.data, dataformat)
             for output_format in inst.output_formats:
                 data = inst.get_data(output_format)
-                assert isinstance(data, list)
+                assert data is not None
