@@ -22,11 +22,14 @@ class BaseWorkflow(object):
 
     def execute_train_task_with_dependencies(self, task_cls, **kwargs):
         task_inst = task_cls()
+        for arg in task_inst.args:
+            if arg not in kwargs:
+                kwargs[arg] = task_inst[arg]
         if hasattr(task_inst, "dependencies"):
             deps = task_inst.dependencies
             dep_results = []
             for dep in deps:
-                dep_results.append(self.execute_train_task_with_dependencies(dep.function, **dep.args))
+                dep_results.append(self.execute_train_task_with_dependencies(dep.cls, **dep.args))
             trained_dependencies = []
             for i in xrange(0,len(deps)):
                 dep = deps[i]
@@ -36,7 +39,7 @@ class BaseWorkflow(object):
                 category = dep.category
                 trained_dependencies.append(TrainedDependency(category=category, namespace=namespace, name = name, inst = dep))
             task_inst.trained_dependencies = trained_dependencies
-        task_inst.train(**task_inst.args)
+        task_inst.train(**kwargs)
         return task_inst
 
     def execute_predict_task(self, task_inst, **kwargs):

@@ -8,7 +8,7 @@ from collections import namedtuple
 import logging
 log = logging.getLogger(__name__)
 
-Dependency = namedtuple("Dependency", ['function', 'args'], verbose=True)
+Dependency = namedtuple("Dependency", ['cls', 'args'], verbose=True)
 
 class Task(FieldModel):
     category = RegistryCategories.base
