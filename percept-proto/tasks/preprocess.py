@@ -9,16 +9,16 @@ class Normalize(Task):
     column_stdevs = List()
     category = RegistryCategories.preprocessors
 
-    def train(self, **kwargs):
+    def train(self, data, **kwargs):
         self.column_means = []
         self.column_stdevs = []
-        for i in xrange(0,self.data.shape[1]):
-            column_mean = np.mean(self.data[i])
-            column_stdev = np.std(self.data[i])
+        for i in xrange(0,data.shape[1]):
+            column_mean = np.mean(data[i])
+            column_stdev = np.std(data[i])
             self.column_means.append(column_mean)
             self.column_stdevs.append(column_stdev)
 
-        self.data = self.predict(self.data)
+        self.data = self.predict(data)
 
     def predict(self, test_data, **kwargs):
         if test_data.shape[1]!=self.data.shape[1]:

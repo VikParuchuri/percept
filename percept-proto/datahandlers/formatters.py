@@ -5,16 +5,12 @@ from utils.models import FieldModel
 from fields.base import Dict
 from conf.base import settings
 from utils.models import RegistryCategories
+from utils.input import DataFormats
 from tests.framework import JSONFormatTester
 import os
 import re
 import logging
 log = logging.getLogger(__name__)
-
-class DataFormats(object):
-    csv = "csv"
-    dataframe = "dataframe"
-
 
 class BaseFormat(FieldModel):
     """

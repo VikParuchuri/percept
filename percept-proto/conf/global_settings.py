@@ -4,6 +4,7 @@ REPO_PATH = path(__file__).dirname()
 ENV_ROOT = REPO_PATH.dirname()
 
 DATASTORE = "percept-proto.fields.datastores.MemoryStore"
+RUNNER = "percept-proto.workflows.runners.SingleThreadedRunner"
 
 PATH_SETTINGS = ["REPO_PATH", "ENV_ROOT"]
 

@@ -3,7 +3,7 @@ import csv
 from fields.base import Dict
 from utils.models import FieldModel
 from conf.base import settings
-from dataformats import DataFormats
+from utils.input import DataFormats
 from utils.models import RegistryCategories
 from tests.framework import CSVInputTester
 import os

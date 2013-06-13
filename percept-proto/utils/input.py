@@ -5,3 +5,7 @@ def import_from_string(import_string):
     mod = __import__(module_path, fromlist=[import_class])
     klass = getattr(mod, import_class)
     return klass
+
+class DataFormats(object):
+    csv = "csv"
+    dataframe = "dataframe"

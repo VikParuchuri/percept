@@ -1,6 +1,6 @@
 from fields.base import Dict, List, Int, Boolean, String
 from utils.models import FieldModel
-from datahandlers.dataformats import DataFormats
+from utils.input import DataFormats
 from conf.base import settings
 from utils.models import RegistryCategories
 
@@ -10,13 +10,15 @@ log = logging.getLogger(__name__)
 class Task(FieldModel):
     category = RegistryCategories.base
     namespace = settings.NAMESPACE
+    data_format = DataFormats.dataframe
+    dependencies = []
+    trained_dependencies = []
     data = Dict()
-    data_format = String(value=DataFormats.dataframe)
 
     def __init__(self, **kwargs):
         super(Task,self).__init__(**kwargs)
 
-    def train(self, **kwargs):
+    def train(self, data, **kwargs):
         pass
 
     def predict(self, test_data, **kwargs):
