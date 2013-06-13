@@ -6,6 +6,17 @@ import inspect
 
 log = logging.getLogger(__name__)
 
+def find_needed_formatter(input_format, output_format):
+    selected_registry = [re.cls for re in registry if re.category==RegistryCategories.formatters]
+    needed_formatters = []
+    for formatter in selected_registry:
+        formatter_inst = formatter()
+        if input_format in formatter_inst.input_formats and output_format in formatter_inst.output_formats:
+            needed_formatters.append(formatter)
+    if len(needed_formatters)>0:
+        return needed_formatters[0]
+    return None
+
 def exists_in_registry(category, namespace, name):
     selected_registry = [re for re in registry if re.category==category and re.namespace==namespace and re.name == name]
     if len(selected_registry)>0:
@@ -16,7 +27,7 @@ class RegistryCategories(object):
     base = "base"
     preprocessors = "preprocessors"
     inputs = "inputs"
-    dataformats = "dataformats"
+    formatters = "formatters"
 
 RegistryEntry = namedtuple('RegistryEntry', ['category', 'namespace', 'name', 'cls'], verbose=True)
 

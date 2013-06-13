@@ -17,7 +17,7 @@ class BaseFormat(FieldModel):
     Base class to reformat input data
     """
     data = Dict()
-    category = RegistryCategories.dataformats
+    category = RegistryCategories.formatters
     namespace = settings.NAMESPACE
 
     def __init__(self, **kwargs):
