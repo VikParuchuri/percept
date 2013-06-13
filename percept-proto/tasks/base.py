@@ -13,9 +13,10 @@ Dependency = namedtuple("Dependency", ['cls', 'args'], verbose=True)
 class Task(FieldModel):
     category = RegistryCategories.base
     namespace = settings.NAMESPACE
-    data_format = DataFormats.dataframe
     dependencies = []
     trained_dependencies = []
+    args = {}
+    data_format = DataFormats.dataframe
     data = Dict()
 
     def __init__(self, **kwargs):

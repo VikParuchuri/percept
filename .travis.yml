@@ -1,0 +1,12 @@
+language: python
+python:
+  - "2.7"
+virtualenv:
+  system_site_packages: true
+before_install:
+  - sudo apt-get update
+  - sudo xargs -a apt-packages.txt apt-get install --fix-missing
+install:
+  - pip install -r base_requirements.txt
+  - sudo apt-get install python-numpy python-scipy python-sklearn python-pandas
+script:  nosetests -vvv
