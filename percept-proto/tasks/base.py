@@ -3,9 +3,12 @@ from utils.models import FieldModel
 from utils.input import DataFormats
 from conf.base import settings
 from utils.models import RegistryCategories
+from collections import namedtuple
 
 import logging
 log = logging.getLogger(__name__)
+
+Dependency = namedtuple("Dependency", ['function', 'args'], verbose=True)
 
 class Task(FieldModel):
     category = RegistryCategories.base
