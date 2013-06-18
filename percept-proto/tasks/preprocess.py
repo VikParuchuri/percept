@@ -3,11 +3,16 @@ from fields.base import List
 import numpy as np
 from conf.base import settings
 from utils.models import RegistryCategories
+from tests.framework import NormalizationTester
+import os
+from utils.input import DataFormats
 
 class Normalize(Task):
     column_means = List()
     column_stdevs = List()
     category = RegistryCategories.preprocessors
+    tester = NormalizationTester
+    test_cases = [{'stream' : os.path.abspath(os.path.join(settings.PACKAGE_PATH,'tests/data/csv/1.csv')), 'dataformat' : DataFormats.csv}]
 
     def train(self, data, **kwargs):
         self.column_means = []

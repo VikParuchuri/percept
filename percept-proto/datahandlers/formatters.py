@@ -51,7 +51,7 @@ class JSONFormat(BaseFormat):
     Converts everything to a base json format, and then converts from that format to output formats, like a pandas dataframe
     """
     tester = JSONFormatTester
-    test_cases = [{'stream' : os.path.abspath(os.path.join(settings.ENV_ROOT,'tests/data/csv/1.csv')), 'dataformat' : DataFormats.csv}]
+    test_cases = [{'stream' : os.path.abspath(os.path.join(settings.PACKAGE_PATH,'tests/data/csv/1.csv')), 'dataformat' : DataFormats.csv}]
 
     def from_csv(self, input_data):
         reformatted_data = []

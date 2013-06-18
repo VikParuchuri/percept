@@ -2,11 +2,12 @@ import json
 from utils.input import import_from_string
 from conf.base import settings
 import logging
+import pickle
 
 log = logging.getLogger(__name__)
 
 class Field(object):
-    value = import_from_string(settings.DATASTORE)()
+    value = import_from_string(settings.CACHE)()
     def __init__(self, required_input = False, value=None):
         self.required_input = required_input
         if value is not None:
@@ -69,3 +70,14 @@ class List(ValueField):
 
 class String(ValueField):
     pass
+
+class Complex(ValueField):
+    def to_json(self, value):
+        return json.dumps(pickle.dumps(value))
+
+    def from_json(self, value):
+        try:
+            new_value = pickle.loads(json.loads(value))
+        except Exception:
+            new_value = None
+        return new_value

@@ -39,3 +39,4 @@ nosetests.xml
 
 #percept
 percept.log
+stored_data

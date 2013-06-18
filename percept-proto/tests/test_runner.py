@@ -1,4 +1,7 @@
 from utils.registry import registry
+import logging
+
+log = logging.getLogger(__name__)
 
 def run_all_tests():
     for item in registry:

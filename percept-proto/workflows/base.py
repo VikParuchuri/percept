@@ -1,5 +1,5 @@
 from utils.input import import_from_string, DataFormats
-from utils.models import find_needed_formatter
+from utils.models import find_needed_formatter, find_needed_input
 from collections import namedtuple
 
 TrainedDependency = namedtuple('DependencyResult', ['category', 'namespace', 'name', 'inst'], verbose=True)
@@ -11,7 +11,8 @@ class BaseWorkflow(object):
     tasks = []
 
     def __init__(self, **kwargs):
-        pass
+        self.input_data = self.read_input(self.find_input())
+        self.reformatted_input = self.reformat_input(self.input_data)
 
     def setup(self, tasks, **kwargs):
         self.tasks = tasks
@@ -24,7 +25,7 @@ class BaseWorkflow(object):
         task_inst = task_cls()
         for arg in task_inst.args:
             if arg not in kwargs:
-                kwargs[arg] = task_inst[arg]
+                kwargs[arg] = task_inst.args[arg]
         if hasattr(task_inst, "dependencies"):
             deps = task_inst.dependencies
             dep_results = []
@@ -49,6 +50,8 @@ class BaseWorkflow(object):
     def train(self, **kwargs):
         self.trained_tasks = []
         for task in self.tasks:
+            data = self.reformatted_input[task.data_format].get_data()
+            kwargs['data']=data
             self.trained_tasks.append(self.execute_train_task_with_dependencies(task, **kwargs))
 
     def predict(self, **kwargs):
@@ -56,6 +59,10 @@ class BaseWorkflow(object):
         for task_inst in self.trained_tasks:
             results.append(self.execute_predict_task(task_inst, **kwargs))
         return results
+
+    def find_input(self):
+        input_cls = find_needed_input(self.input_format)
+        return input_cls
 
     def read_input(self, input_cls, **kwargs):
         input_data = open(self.input_file)

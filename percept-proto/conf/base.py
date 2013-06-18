@@ -10,7 +10,6 @@ log = logging.getLogger(__name__)
 class Settings(object):
     settings_list = None
     def _initialize(self, settings_module):
-
         self.settings_list = []
         for setting in dir(global_settings):
             if setting == setting.upper():

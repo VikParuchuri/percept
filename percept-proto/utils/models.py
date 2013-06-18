@@ -17,6 +17,12 @@ def find_needed_formatter(input_format, output_format):
         return needed_formatters[0]
     return None
 
+def find_needed_input(input_format):
+    needed_inputs = [re.cls for re in registry if re.category==RegistryCategories.inputs and re.cls.input_format == input_format]
+    if len(needed_inputs)>0:
+        return needed_inputs[0]
+    return None
+
 def exists_in_registry(category, namespace, name):
     selected_registry = [re for re in registry if re.category==category and re.namespace==namespace and re.name == name]
     if len(selected_registry)>0:
