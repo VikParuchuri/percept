@@ -7,11 +7,13 @@ import pickle
 log = logging.getLogger(__name__)
 
 class Field(object):
-    value = import_from_string(settings.CACHE)()
-    def __init__(self, required_input = False, value=None):
+    default = None
+
+    def __init__(self, required_input = False):
+        self.value = import_from_string(settings.CACHE)()
         self.required_input = required_input
-        if value is not None:
-            self.__set__(None, value)
+        if self.default is not None:
+            self.__set__(None, self.default)
 
     def __get__(self, obj, obj_type):
         if obj is None:
@@ -35,6 +37,7 @@ class ValueField(Field):
         try:
             new_value = json.loads(value)
         except Exception:
+            log.exception("Could not load value from json. : {0}".format(value))
             new_value = None
         return new_value
 
@@ -66,18 +69,19 @@ class Dict(ValueField):
     pass
 
 class List(ValueField):
-    pass
+    default = []
 
 class String(ValueField):
     pass
 
 class Complex(ValueField):
     def to_json(self, value):
-        return json.dumps(pickle.dumps(value))
+        return pickle.dumps(value)
 
     def from_json(self, value):
         try:
-            new_value = pickle.loads(json.loads(value))
+            new_value = pickle.loads(value)
         except Exception:
+            log.exception("Could not unpickle value. : {0}".format(value))
             new_value = None
         return new_value

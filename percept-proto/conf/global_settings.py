@@ -33,7 +33,7 @@ DEFAULT_LOGGING = {
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
-            'formatter': 'brief',
+            'formatter': 'precise',
             },
         'file': {
             'level': 'DEBUG',
