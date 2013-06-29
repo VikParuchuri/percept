@@ -4,6 +4,9 @@ import numpy as np
 from sklearn import svm
 from conf.base import settings
 from utils.models import RegistryCategories
+from tests.framework import SVMTester
+import os
+from utils.input import DataFormats
 
 class SVMTrain(Task):
     colnames = List()
@@ -11,6 +14,8 @@ class SVMTrain(Task):
     category = RegistryCategories.preprocessors
     algorithm = svm.SVC()
     args = {'C' : 1.0, 'target_name' : 'target'}
+    tester = SVMTester
+    test_cases = [{'stream' : os.path.abspath(os.path.join(settings.PACKAGE_PATH,'tests/data/csv/1.csv')), 'dataformat' : DataFormats.csv}]
 
     def train(self, data, **kwargs):
         self.colnames = [t for t in data.columns if t!=kwargs['target_name']]

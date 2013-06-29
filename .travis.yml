@@ -9,4 +9,4 @@ before_install:
 install:
   - pip install -r base_requirements.txt
   - sudo apt-get install python-numpy python-scipy python-sklearn python-pandas
-script:  nosetests -vvv
+script:  nosetests -vvv percept-proto

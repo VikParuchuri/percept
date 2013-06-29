@@ -16,6 +16,17 @@ class Tester(object):
                 raise Exception("Missing required key {0} in test case".format(arg))
             assert isinstance(kwargs[arg], self.test_case_format[arg])
 
+    def read_and_reformat(self, output_format, stream, stream_format):
+        input_cls = find_needed_input(stream_format)
+        input_inst = input_cls()
+        input_inst.read_input(stream)
+
+        formatter = find_needed_formatter(stream_format, output_format)
+        formatter_inst = formatter()
+        formatter_inst.read_input(input_inst.get_data(), stream_format)
+        data = formatter_inst.get_data(output_format)
+        return data
+
 class CSVInputTester(Tester):
     test_case_format = {'stream' : basestring}
 
@@ -53,14 +64,7 @@ class NormalizationTester(Tester):
         dataformat = kwargs.get('dataformat')
         inst = self.cls()
         output_format = inst.data_format
-        input_cls = find_needed_input(dataformat)
-        input_inst = input_cls()
-        input_inst.read_input(stream)
-
-        formatter = find_needed_formatter(dataformat, output_format)
-        formatter_inst = formatter()
-        formatter_inst.read_input(input_inst.get_data(), dataformat)
-        data = formatter_inst.get_data(output_format)
+        data = self.read_and_reformat(output_format, stream, dataformat)
 
         inst.train(data)
         assert len(inst.column_means)>0
@@ -68,3 +72,21 @@ class NormalizationTester(Tester):
 
         prediction = inst.predict(data)
         assert prediction == inst.data
+
+class SVMTester(Tester):
+    test_case_format = {'stream' : basestring, 'dataformat' : basestring}
+
+    def test(self, **kwargs):
+        super(SVMTester, self).test(**kwargs)
+        stream = open(kwargs.get('stream'))
+        dataformat = kwargs.get('dataformat')
+        inst = self.cls()
+        output_format = inst.data_format
+        data = self.read_and_reformat(output_format, stream, dataformat)
+
+        inst.train(data)
+        assert inst.clf is not None
+
+        prediction = inst.predict(data)
+        log.info(prediction)
+        raise

@@ -1,6 +1,7 @@
 from utils.input import import_from_string, DataFormats
 from utils.models import find_needed_formatter, find_needed_input
 from collections import namedtuple
+from conf.base import settings
 
 TrainedDependency = namedtuple('DependencyResult', ['category', 'namespace', 'name', 'inst'], verbose=True)
 
