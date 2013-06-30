@@ -73,20 +73,23 @@ class NormalizationTester(Tester):
         prediction = inst.predict(data)
         equal_cells = int(sum((prediction == inst.data).unstack()))
         cell_count = prediction.unstack().shape[0]
-        assert  equal_cells == cell_count
+        assert equal_cells == cell_count
 
 class SVMTester(Tester):
-    test_case_format = {'stream' : basestring, 'dataformat' : basestring}
+    test_case_format = {'data' : basestring, 'target' : basestring, 'dataformat' : basestring}
 
     def test(self, **kwargs):
         super(SVMTester, self).test(**kwargs)
-        stream = open(kwargs.get('stream'))
+        datafile = open(kwargs.get('data'))
+        targetfile = open(kwargs.get('target'))
         dataformat = kwargs.get('dataformat')
+
         inst = self.cls()
         output_format = inst.data_format
-        data = self.read_and_reformat(output_format, stream, dataformat)
+        data = self.read_and_reformat(output_format, datafile, dataformat)
+        target = self.read_and_reformat(output_format, targetfile, dataformat)
 
-        inst.train(data)
+        inst.train(data, target)
         assert inst.clf is not None
 
         prediction = inst.predict(data)

@@ -16,7 +16,7 @@ class Normalize(Task):
     column_stdevs = List()
     category = RegistryCategories.preprocessors
     tester = NormalizationTester
-    test_cases = [{'stream' : os.path.abspath(os.path.join(settings.PACKAGE_PATH,'tests/data/csv/1.csv')), 'dataformat' : DataFormats.csv}]
+    test_cases = [{'stream' : os.path.abspath(os.path.join(settings.PACKAGE_PATH,'tests/data/csv/1/data.csv')), 'dataformat' : DataFormats.csv}]
     data = Complex()
 
     def train(self, data, **kwargs):

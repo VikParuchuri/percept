@@ -39,7 +39,7 @@ class CSVInput(BaseInput):
     """
     input_format = DataFormats.csv
     tester = CSVInputTester
-    test_cases = [{'stream' : os.path.abspath(os.path.join(settings.PACKAGE_PATH,'tests/data/csv/1.csv'))}]
+    test_cases = [{'stream' : os.path.abspath(os.path.join(settings.PACKAGE_PATH,'tests/data/csv/1/data.csv'))}]
 
     def read_input(self, stream, has_header=True):
         """
