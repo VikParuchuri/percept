@@ -1,4 +1,4 @@
-class BaseStore(object):
+class BaseCache(object):
     """
     Base class for datastore
     """
@@ -13,7 +13,7 @@ class BaseStore(object):
     def __set__(self, obj, value):
         self.data = value
 
-class MemoryStore(BaseStore):
+class MemoryCache(BaseCache):
     """
     Stores everything in memory only
     """

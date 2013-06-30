@@ -8,5 +8,5 @@ before_install:
   - sudo xargs -a apt-packages.txt apt-get install --fix-missing
 install:
   - pip install -r base_requirements.txt
-  - sudo apt-get install python-numpy python-scipy python-sklearn python-pandas
-script:  nosetests -vvv
+  - sudo apt-get install python-numpy python-scipy
+script:  nosetests -v percept-proto

@@ -1,6 +1,7 @@
 from utils.input import import_from_string, DataFormats
-from utils.models import find_needed_formatter
+from utils.models import find_needed_formatter, find_needed_input
 from collections import namedtuple
+from conf.base import settings
 
 TrainedDependency = namedtuple('DependencyResult', ['category', 'namespace', 'name', 'inst'], verbose=True)
 
@@ -8,10 +9,13 @@ class BaseWorkflow(object):
     runner = import_from_string(settings.RUNNER)()
     input_file = ""
     input_format = DataFormats.csv
+    target_file = ""
+    target_format = DataFormats.csv
     tasks = []
 
     def __init__(self, **kwargs):
-        pass
+        self.input_data = self.read_input(self.find_input())
+        self.reformatted_input = self.reformat_input(self.input_data)
 
     def setup(self, tasks, **kwargs):
         self.tasks = tasks
@@ -24,7 +28,7 @@ class BaseWorkflow(object):
         task_inst = task_cls()
         for arg in task_inst.args:
             if arg not in kwargs:
-                kwargs[arg] = task_inst[arg]
+                kwargs[arg] = task_inst.args[arg]
         if hasattr(task_inst, "dependencies"):
             deps = task_inst.dependencies
             dep_results = []
@@ -49,7 +53,16 @@ class BaseWorkflow(object):
     def train(self, **kwargs):
         self.trained_tasks = []
         for task in self.tasks:
-            self.trained_tasks.append(self.execute_train_task_with_dependencies(task, **kwargs))
+            data = self.reformatted_input[task.data_format]['data']
+            target = self.reformatted_input[task.data_format]['target']
+            kwargs['data']=data
+            kwargs['target']=target
+            trained_task = self.execute_train_task_with_dependencies(task, **kwargs)
+            self.trained_tasks.append(trained_task)
+
+            #If the trained task alters the data in any way, pass it down the chain to the next task
+            if hasattr(trained_task, 'data'):
+                self.reformatted_input[task.data_format]['data'] = trained_task.data
 
     def predict(self, **kwargs):
         results = []
@@ -57,8 +70,12 @@ class BaseWorkflow(object):
             results.append(self.execute_predict_task(task_inst, **kwargs))
         return results
 
-    def read_input(self, input_cls, **kwargs):
-        input_data = open(self.input_file)
+    def find_input(self):
+        input_cls = find_needed_input(self.input_format)
+        return input_cls
+
+    def read_input(self, input_cls, filename, **kwargs):
+        input_data = open(filename)
         input_inst = input_cls()
         input_inst.read_input(input_data)
         return input_inst.get_data()
@@ -74,8 +91,12 @@ class BaseWorkflow(object):
             if formatter is None:
                 raise Exception("Cannot find a formatter that can convert from {0} to {1}".format(self.input_format, output_format))
             formatter_inst = formatter()
-            formatter_inst.read_input(input_data, self.input_format)
-            reformatted_input.update({output_format : formatter_inst})
+            formatter_inst.read_input(input_data, self.input_format, self.input_file)
+
+            target_inst = formatter()
+            target_inst.read_input(input_data, self.target_format, self.target_file)
+
+            reformatted_input.update({output_format : {'data' : formatter_inst.get_data(), 'target' : target_inst.get_data()}})
         return reformatted_input
 
 class NaiveWorkflow(BaseWorkflow):

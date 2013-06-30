@@ -1,16 +1,25 @@
 from path import path
+import os
 
-REPO_PATH = path(__file__).dirname()
-ENV_ROOT = REPO_PATH.dirname()
+FOLDER_PATH = path(__file__).dirname()
+PACKAGE_PATH = FOLDER_PATH.dirname()
+REPO_PATH = PACKAGE_PATH.dirname()
 
-DATASTORE = "percept-proto.fields.datastores.MemoryStore"
+CACHE = "percept-proto.fields.caches.MemoryCache"
 RUNNER = "percept-proto.workflows.runners.SingleThreadedRunner"
+DATASTORE = "percept-proto.workflows.datastores.MemoryStore"
 
-PATH_SETTINGS = ["REPO_PATH", "ENV_ROOT"]
+PATH_SETTINGS = ["REPO_PATH", "PACKAGE_PATH"]
 
 MODULE_VARIABLE = "PERCEPT_SETTINGS_MODULE"
 
 NAMESPACE = "percept"
+
+RUN_ID = "run1"
+
+DATA_PATH = os.path.abspath(os.path.join(REPO_PATH, "stored_data"))
+if not os.path.exists(DATA_PATH):
+    os.makedirs(DATA_PATH)
 
 INSTALLED_APPS = [
     'percept-proto.datahandlers',
@@ -24,7 +33,7 @@ DEFAULT_LOGGING = {
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
-            'formatter': 'brief',
+            'formatter': 'precise',
             },
         'file': {
             'level': 'DEBUG',
