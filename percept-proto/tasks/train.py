@@ -31,12 +31,14 @@ class SVMTrain(Task):
         self.colnames = [t for t in data.columns]
 
         C = kwargs.get('C',1)
-        self.clf = self.algorithm(C=C)
-        log.info(data)
-        log.info(target)
-        self.clf.fit(data, target)
+
+        #When doing self.clf =clf , __set__ is called on the field.
+        # But, when doing self.clf = self.algorithm() and self.clf.fit(), __set__ is not called.
+        # Work around this by doing the fit logic on a local variable, and then assigning to self.clf,
+        clf = self.algorithm(C=C)
+        clf.fit(data, target)
+        self.clf = clf
 
     def predict(self, test_data, **kwargs):
         test_data = test_data
-        log.info(test_data)
         return self.clf.predict(test_data)

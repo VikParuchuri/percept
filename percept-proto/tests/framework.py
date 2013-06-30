@@ -2,6 +2,7 @@ import logging
 log = logging.getLogger(__name__)
 from utils.registry import registry, find_in_registry
 from utils.models import RegistryCategories, find_needed_formatter, find_needed_input
+import numpy as np
 
 class Tester(object):
     test_case_format = {}
@@ -93,5 +94,4 @@ class SVMTester(Tester):
         assert inst.clf is not None
 
         prediction = inst.predict(data)
-        log.info(prediction)
-        raise
+        assert isinstance(prediction, np.ndarray)
