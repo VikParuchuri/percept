@@ -53,11 +53,16 @@ class BaseWorkflow(object):
     def train(self, **kwargs):
         self.trained_tasks = []
         for task in self.tasks:
-            data = self.reformatted_input[task.data_format]['data'].get_data()
-            target = self.reformatted_input[task.data_format]['target'].get_data()
+            data = self.reformatted_input[task.data_format]['data']
+            target = self.reformatted_input[task.data_format]['target']
             kwargs['data']=data
             kwargs['target']=target
-            self.trained_tasks.append(self.execute_train_task_with_dependencies(task, **kwargs))
+            trained_task = self.execute_train_task_with_dependencies(task, **kwargs)
+            self.trained_tasks.append(trained_task)
+
+            #If the trained task alters the data in any way, pass it down the chain to the next task
+            if hasattr(trained_task, 'data'):
+                self.reformatted_input[task.data_format]['data'] = trained_task.data
 
     def predict(self, **kwargs):
         results = []
@@ -91,7 +96,7 @@ class BaseWorkflow(object):
             target_inst = formatter()
             target_inst.read_input(input_data, self.target_format, self.target_file)
 
-            reformatted_input.update({output_format : {'data' : formatter_inst, 'target' : target_inst}})
+            reformatted_input.update({output_format : {'data' : formatter_inst.get_data(), 'target' : target_inst.get_data()}})
         return reformatted_input
 
 class NaiveWorkflow(BaseWorkflow):
