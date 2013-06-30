@@ -66,12 +66,14 @@ class NormalizationTester(Tester):
         output_format = inst.data_format
         data = self.read_and_reformat(output_format, stream, dataformat)
 
-        inst.train(data)
+        inst.train(data.copy())
         assert len(inst.column_means)>0
         assert len(inst.column_stdevs)>0
 
         prediction = inst.predict(data)
-        assert prediction == inst.data
+        equal_cells = int(sum((prediction == inst.data).unstack()))
+        cell_count = prediction.unstack().shape[0]
+        assert  equal_cells == cell_count
 
 class SVMTester(Tester):
     test_case_format = {'stream' : basestring, 'dataformat' : basestring}

@@ -7,10 +7,11 @@ import pickle
 log = logging.getLogger(__name__)
 
 class Field(object):
+    value_cls = import_from_string(settings.CACHE)
     default = None
 
     def __init__(self, required_input = False):
-        self.value = import_from_string(settings.CACHE)()
+        self.value = self.value_cls()
         self.required_input = required_input
         if self.default is not None:
             self.__set__(None, self.default)
