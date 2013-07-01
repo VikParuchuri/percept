@@ -1,5 +1,5 @@
 class BaseRunner(object):
-    def __init__(**kwargs):
+    def __init__(self, **kwargs):
         pass
 
     def run(self, sig, **kwargs):
