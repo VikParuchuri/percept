@@ -6,7 +6,7 @@ from conf.base import settings
 TrainedDependency = namedtuple('DependencyResult', ['category', 'namespace', 'name', 'inst'], verbose=True)
 
 class BaseWorkflow(object):
-    runner = import_from_string(settings.RUNNER)()
+    runner = import_from_string(settings.RUNNER)
     input_file = ""
     input_format = DataFormats.csv
     target_file = ""
@@ -14,6 +14,7 @@ class BaseWorkflow(object):
     tasks = []
 
     def __init__(self, **kwargs):
+        self.runner = self.runner()
         self.input_data = self.read_input(self.find_input())
         self.reformatted_input = self.reformat_input(self.input_data)
 
