@@ -26,7 +26,7 @@ class BaseCommand(object):
         make_option('--settings',
                     help='The Python path to a settings module, e.g. "myproject.settings.main".'),
         make_option('--pythonpath',
-                    help='A directory to add to the Python path')
+                    help='A directory to add to the Python path'),
     )
     command_help = ''
     args = ''
@@ -44,9 +44,10 @@ class BaseCommand(object):
         prog_name - Name of a command
         subcommand - Name of a subcommand
         """
-        return OptionParser(prog=prog_name,
-                            usage=self.usage(subcommand),
-                            option_list=self.option_list)
+        parser = OptionParser(prog=prog_name,
+                              usage=self.usage(subcommand),
+                              option_list=self.option_list)
+        return parser
 
     def print_help(self, prog_name, subcommand):
         """

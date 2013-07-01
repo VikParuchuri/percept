@@ -38,7 +38,8 @@ if not os.path.exists(DATA_PATH):
 INSTALLED_APPS = [
     'percept-proto.datahandlers',
     'percept-proto.tasks',
-    'percept-proto.workflows'
+    'percept-proto.workflows',
+    'percept-proto.tests'
 ]
 
 #Setup logger configuration

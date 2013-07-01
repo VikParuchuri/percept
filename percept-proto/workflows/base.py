@@ -15,8 +15,7 @@ class BaseWorkflow(object):
 
     def __init__(self, **kwargs):
         self.runner = self.runner()
-        self.input_data = self.read_input(self.find_input())
-        self.reformatted_input = self.reformat_input(self.input_data)
+        self.reformatted_input = self.reformat_input()
 
     def setup(self, tasks, **kwargs):
         self.tasks = tasks
@@ -81,23 +80,35 @@ class BaseWorkflow(object):
         input_inst.read_input(input_data)
         return input_inst.get_data()
 
-    def reformat_input(self, input_data,  **kwargs):
+    def reformat_file(self, input_file, input_format, output_format):
+        formatter = find_needed_formatter(input_format, output_format)
+        if formatter is None:
+            raise Exception("Cannot find a formatter that can convert from {0} to {1}".format(self.input_format, output_format))
+        formatter_inst = formatter()
+        formatter_inst.read_input(self.open_file(input_file), input_format)
+        data = formatter_inst.get_data(output_format)
+        return data
+
+    def open_file(self, input_file):
+        return open(input_file).read()
+
+    def reformat_input(self, **kwargs):
         reformatted_input = {}
         needed_formats = []
         for task_cls in self.tasks:
             needed_formats.append(task_cls.data_format)
         needed_formats = list(set(needed_formats))
+
         for output_format in needed_formats:
-            formatter = find_needed_formatter(self.input_format, output_format)
-            if formatter is None:
-                raise Exception("Cannot find a formatter that can convert from {0} to {1}".format(self.input_format, output_format))
-            formatter_inst = formatter()
-            formatter_inst.read_input(input_data, self.input_format, self.input_file)
-
-            target_inst = formatter()
-            target_inst.read_input(input_data, self.target_format, self.target_file)
-
-            reformatted_input.update({output_format : {'data' : formatter_inst.get_data(), 'target' : target_inst.get_data()}})
+            reformatted_input.update(
+                {
+                    output_format :
+                        {
+                        'data' : self.reformat_file(self.input_file, self.input_format, output_format),
+                        'target' : self.reformat_file(self.target_file, self.target_format, output_format),
+                        }
+                }
+            )
         return reformatted_input
 
 class NaiveWorkflow(BaseWorkflow):
