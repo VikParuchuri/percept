@@ -15,7 +15,7 @@ SERIALIZE_CACHE_VALUES = False
 RUNNER = "percept-proto.workflows.runners.SingleThreadedRunner"
 
 #What to use as a datastore
-DATASTORE = "percept-proto.workflows.datastores.MemoryStore"
+DATASTORE = "percept-proto.workflows.datastores.FileStore"
 
 #Append these settings to sys.path
 PATH_SETTINGS = ["REPO_PATH", "PACKAGE_PATH"]
