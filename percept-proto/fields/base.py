@@ -19,10 +19,16 @@ class Field(object):
     def __get__(self, obj, obj_type):
         if obj is None:
             return self
-        return self.from_json(self.value)
+        if settings.SERIALIZE_CACHE_VALUES:
+            return self.from_json(self.value)
+        else:
+            return self.value
 
     def __set__(self, obj, value):
-        self.value = self.to_json(value)
+        if settings.SERIALIZE_CACHE_VALUES:
+            self.value = self.to_json(value)
+        else:
+            self.value = value
 
     def to_json(self, value):
         return value

@@ -111,5 +111,8 @@ class BaseWorkflow(object):
             )
         return reformatted_input
 
+    def save(self, **kwargs):
+        pass
+
 class NaiveWorkflow(BaseWorkflow):
     pass
