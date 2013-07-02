@@ -35,6 +35,7 @@ class RegistryCategories(object):
     inputs = "inputs"
     formatters = "formatters"
     algorithms = "algorithms"
+    workflows = "workflows"
 
 RegistryEntry = namedtuple('RegistryEntry', ['category', 'namespace', 'name', 'cls'], verbose=False)
 

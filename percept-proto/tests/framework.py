@@ -96,8 +96,15 @@ class SVMTester(Tester):
         prediction = inst.predict(data)
         assert isinstance(prediction, np.ndarray)
 
-class WorkflowTester(Tester):
+class NaiveWorkflowTester(Tester):
     test_case_format = {'config_file' : basestring}
 
     def test(self, **kwargs):
+        super(NaiveWorkflowTester, self).test(**kwargs)
+        config_file = kwargs.get('config_file')
+
         from utils.workflow import WorkflowWrapper
+        wrapper = WorkflowWrapper(config_file, self.cls)
+        wrapper.workflow.train()
+
+        assert wrapper.workflow.setup_run == True

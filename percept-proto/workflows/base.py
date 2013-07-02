@@ -1,7 +1,8 @@
 from utils.input import import_from_string, DataFormats
-from utils.models import find_needed_formatter, find_needed_input
+from utils.models import find_needed_formatter, find_needed_input, RegistryCategories, MetaFieldModel
 from collections import namedtuple
 from conf.base import settings
+from tests.framework import NaiveWorkflowTester
 import logging
 import os
 
@@ -36,6 +37,11 @@ class WorkflowLoader(object):
         return identifier
 
 class BaseWorkflow(object):
+    __metaclass__ = MetaFieldModel
+    category = RegistryCategories.base
+    namespace = settings.NAMESPACE
+    name = __name__.lower()
+
     runner = import_from_string(settings.RUNNER)
     input_file = ""
     input_format = DataFormats.csv
@@ -159,4 +165,6 @@ class BaseWorkflow(object):
         pass
 
 class NaiveWorkflow(BaseWorkflow):
-    pass
+    category = RegistryCategories.workflows
+    tester = NaiveWorkflowTester
+    test_cases = [{'config_file' : os.path.abspath(os.path.join(settings.PACKAGE_PATH,'tests/workflow_config/test.conf'))}]
