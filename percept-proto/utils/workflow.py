@@ -1,21 +1,29 @@
 from utils.registry import registry, find_in_registry
-from workflows.base import NaiveWorkflow
+import ConfigParser
 
 class WorkflowWrapper(object):
     """
     Wraps a workflow
     """
-    workflow = NaiveWorkflow
+    config_file_format = "{0}/../{1}"
 
-    def __init__(self, input_file, input_format, target_file, target_format, tasks, run_id):
-        self.input_file = input_file
-        self.input_format = input_format
-        self.target_file = target_file
-        self.target_format = target_format
-        self.run_id = run_id
+    def __init__(self, config_file, workflow):
+        config = ConfigParser.SafeConfigParser()
+        config.read(config_file)
+
+        self.input_file = self.reformat_filepath(config_file, config.get('inputs', 'file'))
+        self.input_format = config.get('inputs', 'format')
+
+        self.target_file = self.reformat_filepath(config_file, config.get('targets', 'file'))
+        self.target_format = config.get('targets', 'format')
+
+        tasks = config.get('tasks', 'list')
+        tasks = tasks.split(",")
+
+        self.run_id = config.get('tasks', 'run_id')
 
         self.setup_tasks(tasks)
-        self.initialize_workflow()
+        self.initialize_workflow(workflow)
 
     def setup_tasks(self, tasks):
         task_classes = []
@@ -25,8 +33,8 @@ class WorkflowWrapper(object):
             task_classes.append(cls)
         self.tasks = task_classes
 
-    def initialize_workflow(self):
-        self.workflow = self.workflow()
+    def initialize_workflow(self, workflow):
+        self.workflow = workflow()
         self.workflow.tasks = self.tasks
 
         self.workflow.input_file = self.input_file
@@ -36,3 +44,8 @@ class WorkflowWrapper(object):
         self.workflow.run_id = self.run_id
 
         self.workflow.setup()
+
+    def reformat_filepath(self, config_file, filename):
+        if not filename.startswith("/"):
+            filename = self.config_file_format.format(config_file, filename)
+        return filename

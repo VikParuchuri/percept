@@ -95,3 +95,9 @@ class SVMTester(Tester):
 
         prediction = inst.predict(data)
         assert isinstance(prediction, np.ndarray)
+
+class WorkflowTester(Tester):
+    test_case_format = {'config_file' : basestring}
+
+    def test(self, **kwargs):
+        from utils.workflow import WorkflowWrapper
