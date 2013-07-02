@@ -25,6 +25,8 @@ class BaseInput(FieldModel):
 
     input_format = "none"
 
+    help_text = "Base class for input.  Do not use directly."
+
     def __init__(self, **kwargs):
         super(BaseInput, self).__init__(**kwargs)
 
@@ -47,6 +49,8 @@ class CSVInput(BaseInput):
     input_format = DataFormats.csv
     tester = CSVInputTester
     test_cases = [{'stream' : os.path.abspath(os.path.join(settings.PACKAGE_PATH,'tests/data/csv/1/data.csv'))}]
+
+    help_text = "Example class to load in csv files."
 
     def read_input(self, stream, has_header=True):
         """

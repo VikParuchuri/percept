@@ -35,6 +35,7 @@ class BaseWorkflow(object):
     predict_format = DataFormats.csv
     tasks = []
     run_id = ""
+    help_text = "Base class for workflow.  Do not use directly."
 
     def __init__(self, **kwargs):
         #initialize runner.  Don't do this at class level to avoid sharing same runner object.
@@ -224,3 +225,4 @@ class NaiveWorkflow(BaseWorkflow):
         {'config_file' : os.path.abspath(os.path.join(settings.PACKAGE_PATH,'tests/workflow_config/test_save.conf'))},
         {'config_file' : os.path.abspath(os.path.join(settings.PACKAGE_PATH,'tests/workflow_config/test_load.conf'))}
     ]
+    help_text = "Naive workflow class that is not optimized."
