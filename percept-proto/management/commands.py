@@ -1,3 +1,7 @@
+"""
+Allow for the creation of custom command line commands
+"""
+
 from optparse import make_option, OptionParser
 import sys
 import os

@@ -1,3 +1,7 @@
+"""
+Machine learning algorithms to train and predict
+"""
+
 from base import Task
 from fields.base import Complex, List
 import numpy as np
@@ -13,6 +17,9 @@ import logging
 log = logging.getLogger(__name__)
 
 class SVMTrain(Task):
+    """
+    A class to train a support vector machine algorithm
+    """
     colnames = List()
     clf = Complex()
     category = RegistryCategories.algorithms

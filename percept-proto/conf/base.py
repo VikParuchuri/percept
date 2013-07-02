@@ -1,3 +1,7 @@
+"""
+Application level configuration and logging
+"""
+
 import os
 import global_settings
 import sys

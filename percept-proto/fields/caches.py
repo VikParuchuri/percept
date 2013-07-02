@@ -1,6 +1,10 @@
+"""
+Data caching, used by fields.base
+"""
+
 class BaseCache(object):
     """
-    Base class for datastore
+    Base class for datastore.  Used by fields.base to cache.
     """
     def __init__(self):
         self.data = None

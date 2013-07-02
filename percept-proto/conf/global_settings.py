@@ -1,3 +1,7 @@
+"""
+Default settings that can be overridden with custom settings files
+"""
+
 from path import path
 import os
 import sys

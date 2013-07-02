@@ -1,3 +1,7 @@
+"""
+Given a config file, run a given workflow
+"""
+
 from management.commands import BaseCommand
 from utils.registry import registry, find_in_registry
 from workflows.base import NaiveWorkflow, WorkflowLoader
