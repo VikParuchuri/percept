@@ -2,6 +2,9 @@ from utils.input import import_from_string, DataFormats
 from utils.models import find_needed_formatter, find_needed_input
 from collections import namedtuple
 from conf.base import settings
+import logging
+
+log = logging.getLogger(__name__)
 
 TrainedDependency = namedtuple('DependencyResult', ['category', 'namespace', 'name', 'inst'], verbose=False)
 
@@ -52,6 +55,7 @@ class BaseWorkflow(object):
         return dependencies
 
     def execute_train_task_with_dependencies(self, task_cls, **kwargs):
+        log.info("Task {0}".format(task_cls.__name__))
         task_inst = task_cls()
         for arg in task_inst.args:
             if arg not in kwargs:
@@ -60,6 +64,7 @@ class BaseWorkflow(object):
             deps = task_inst.dependencies
             dep_results = []
             for dep in deps:
+                log.info("Dependency {0}".format(dep.__name__))
                 dep_results.append(self.execute_train_task_with_dependencies(dep.cls, **dep.args))
             trained_dependencies = []
             for i in xrange(0,len(deps)):
@@ -78,6 +83,7 @@ class BaseWorkflow(object):
         return result
 
     def train(self, **kwargs):
+        log.info("Starting to train...")
         if not self.setup_run:
             self.setup()
         self.trained_tasks = []
@@ -92,6 +98,7 @@ class BaseWorkflow(object):
             #If the trained task alters the data in any way, pass it down the chain to the next task
             if hasattr(trained_task, 'data'):
                 self.reformatted_input[task.data_format]['data'] = trained_task.data
+        log.info("Finished training.")
 
     def predict(self, **kwargs):
         results = []

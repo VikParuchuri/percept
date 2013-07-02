@@ -1,5 +1,6 @@
 from path import path
 import os
+import sys
 
 #Various paths
 FOLDER_PATH = path(__file__).dirname()
@@ -34,6 +35,9 @@ DATA_PATH = os.path.abspath(os.path.join(REPO_PATH, "stored_data"))
 if not os.path.exists(DATA_PATH):
     os.makedirs(DATA_PATH)
 
+#What severity of error to log to file and console.  One of "DEBUG", "WARN", "INFO", "ERROR"
+LOG_LEVEL = "DEBUG"
+
 #Commands are discovered here, and tasks/inputs/formats are imported using only these modules
 INSTALLED_APPS = [
     'percept-proto.datahandlers',
@@ -46,6 +50,17 @@ INSTALLED_APPS = [
 DEFAULT_LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters' : {
+        'precise' : {
+            'format' : '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        },
+        'verbose' : {
+            'format' : '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'brief' : {
+            'format' : '%(asctime)s - %(name)s - %(message)s'
+        }
+    },
     'handlers': {
         'console': {
             'level': 'DEBUG',
@@ -60,8 +75,10 @@ DEFAULT_LOGGING = {
             },
     },
     'loggers': {
-        'percept': {
+        '': {
             'handlers': ['console', 'file'],
+            'propagate' : True,
+            'level' : LOG_LEVEL
             },
         }
 }

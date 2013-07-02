@@ -85,12 +85,11 @@ class Settings(object):
         """
         Setting up logging from logging config in settings
         """
-        if self.LOGGING_CONFIG:
+        if not self.LOGGING_CONFIG:
             #Fallback to default logging in global settings if needed
             dictConfig(self.DEFAULT_LOGGING)
-
-            if self.LOGGING:
-                dictConfig(self.LOGGING)
+        else:
+            dictConfig(self.LOGGING_CONFIG)
 
     @property
     def configured(self):
