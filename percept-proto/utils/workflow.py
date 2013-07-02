@@ -31,8 +31,16 @@ class WorkflowLoader(object):
         id_code = self.generate_save_identifier(obj, run_id)
         self.store.save(obj, id_code)
 
+    def save_predictions(self, obj, run_id):
+        id_code = self.generate_prediction_save_identifier(obj, run_id)
+        self.store.save(obj, id_code)
+
     def generate_save_identifier(self, obj, run_id):
         identifier = "{0}-{1}".format(obj.__class__.__name__.lower(), run_id)
+        return identifier
+
+    def generate_prediction_save_identifier(self, obj, run_id):
+        identifier = self.generate_save_identifier(obj, run_id) + "_predictions"
         return identifier
 
     def generate_load_identifier(self, cls, run_id):
@@ -70,8 +78,11 @@ class WorkflowWrapper(object):
         self.save_flow = config.get('meta', 'save_flow').lower() == "true"
         self.load_previous_flow = config.get('meta', 'load_previous_flow').lower() == "true"
         self.predict = config.get('meta', 'predict').lower() == "true"
+
+        self.predict_file = None
+        self.predict_format = None
         if self.predict:
-            self.predict_file = config.get('predict', 'file')
+            self.predict_file = self.reformat_filepath(config_file, config.get('predict', 'file'))
             self.predict_format = config.get('predict', 'format')
 
         self.workflow_loader = WorkflowLoader()
@@ -113,13 +124,21 @@ class WorkflowWrapper(object):
             filename = self.config_file_format.format(config_file, filename)
         return filename
 
-    def setup(self):
+    def run(self):
         if self.load_previous_flow:
             self.load()
         else:
            self.train_workflow()
         if self.save_flow:
             self.save()
+        if self.predict:
+            self.workflow.predict_file = self.predict_file
+            self.workflow.predict_format = self.predict_format
+            predictions = self.predict_workflow()
+            self.save_predictions(predictions)
+
+    def predict_workflow(self):
+        return self.workflow.predict()
 
     def train_workflow(self):
         self.setup_tasks(self.task_names)
@@ -131,3 +150,6 @@ class WorkflowWrapper(object):
 
     def load(self):
         self.workflow = self.workflow_loader.load(self.workflow, self.run_id)
+
+    def save_predictions(self, predictions):
+        self.workflow_loader.save_predictions(predictions, self.run_id)

@@ -17,9 +17,5 @@ class Command(BaseCommand):
         config_file = args[0]
 
         wrapper = WorkflowWrapper(config_file, NaiveWorkflow)
-        wrapper.setup()
-
-        loader = WorkflowLoader()
-        loader.save(wrapper.workflow, wrapper.run_id)
-
+        wrapper.run()
 
