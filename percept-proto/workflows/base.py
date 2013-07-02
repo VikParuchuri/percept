@@ -3,7 +3,7 @@ from utils.models import find_needed_formatter, find_needed_input
 from collections import namedtuple
 from conf.base import settings
 
-TrainedDependency = namedtuple('DependencyResult', ['category', 'namespace', 'name', 'inst'], verbose=True)
+TrainedDependency = namedtuple('DependencyResult', ['category', 'namespace', 'name', 'inst'], verbose=False)
 
 class WorkflowLoader(object):
     """
@@ -41,10 +41,11 @@ class BaseWorkflow(object):
 
     def __init__(self, **kwargs):
         self.runner = self.runner()
-        self.reformatted_input = self.reformat_input()
+        self.setup_run = False
 
-    def setup(self, tasks, **kwargs):
-        self.tasks = tasks
+    def setup(self):
+        self.reformatted_input = self.reformat_input()
+        self.setup_run = True
 
     def find_dependencies(self, task):
         dependencies = task.dependencies
@@ -77,6 +78,8 @@ class BaseWorkflow(object):
         return result
 
     def train(self, **kwargs):
+        if not self.setup_run:
+            self.setup()
         self.trained_tasks = []
         for task in self.tasks:
             data = self.reformatted_input[task.data_format]['data']
