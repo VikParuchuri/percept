@@ -1,6 +1,7 @@
 from utils.registry import registry, find_in_registry
 from conf.base import settings
 from utils.input import import_from_string
+from utils.models import get_task_name
 import ConfigParser
 
 class WorkflowLoader(object):
@@ -36,15 +37,15 @@ class WorkflowLoader(object):
         self.store.save(obj, id_code)
 
     def generate_save_identifier(self, obj, run_id):
-        identifier = "{0}-{1}".format(obj.__class__.__name__.lower(), run_id)
+        identifier = "{0}-{1}".format(get_task_name(obj), run_id)
         return identifier
 
     def generate_prediction_save_identifier(self, obj, run_id):
-        identifier = self.generate_save_identifier(obj, run_id) + "_predictions"
+        identifier = "{0}_predictions".format(run_id)
         return identifier
 
     def generate_load_identifier(self, cls, run_id):
-        identifier = "{0}-{1}".format(cls.__name__.lower(), run_id)
+        identifier = "{0}-{1}".format(get_task_name(cls), run_id)
         return identifier
 
 class WorkflowWrapper(object):

@@ -3,7 +3,7 @@ Workflows allow us to run tasks
 """
 
 from utils.input import import_from_string, DataFormats
-from utils.models import find_needed_formatter, find_needed_input, RegistryCategories, MetaFieldModel
+from utils.models import find_needed_formatter, find_needed_input, RegistryCategories, MetaFieldModel, get_task_name
 from collections import namedtuple
 from conf.base import settings
 from tests.framework import NaiveWorkflowTester
@@ -55,7 +55,7 @@ class BaseWorkflow(object):
         Run the training, as well as any dependencies of the training
         task_cls - class of a task
         """
-        log.info("Task {0}".format(task_cls.__name__))
+        log.info("Task {0}".format(get_task_name(task_cls)))
         #Instantiate the task
         task_inst = task_cls()
         #Grab arguments from the task instance and set them
@@ -68,7 +68,7 @@ class BaseWorkflow(object):
             dep_results = []
             #Run the dependencies through recursion (in case of dependencies of dependencies, etc)
             for dep in deps:
-                log.info("Dependency {0}".format(dep.__name__))
+                log.info("Dependency {0}".format(get_task_name(dep)))
                 dep_results.append(self.execute_train_task_with_dependencies(dep.cls, **dep.args))
             trained_dependencies = []
             #Add executed dependency to trained_dependencies list on the task
@@ -118,11 +118,11 @@ class BaseWorkflow(object):
         Do the workflow prediction (done after training, with new data)
         """
         reformatted_predict = self.reformat_predict_data()
-        results = []
+        results = {}
         for task_inst in self.trained_tasks:
             predict = reformatted_predict[task_inst.data_format]['predict']
             kwargs['predict']=predict
-            results.append(self.execute_predict_task(task_inst, predict, **kwargs))
+            results.update({get_task_name(task_inst) : self.execute_predict_task(task_inst, predict, **kwargs)})
         return results
 
     def find_input(self, input_format):
