@@ -24,7 +24,6 @@ class WorkflowWrapper(object):
         task_classes = []
         for task in tasks:
             category, namespace, name = task.split(".")
-            print(task)
             cls = find_in_registry(category=category, namespace=namespace, name=name)[0]
             task_classes.append(cls)
         self.tasks = task_classes
