@@ -1,3 +1,7 @@
+"""
+Testing framework
+"""
+
 import logging
 log = logging.getLogger(__name__)
 from utils.registry import registry, find_in_registry
@@ -5,23 +9,39 @@ from utils.models import RegistryCategories, find_needed_formatter, find_needed_
 import numpy as np
 
 class Tester(object):
+    """
+    Base tester class.  Testers are specified by task/workflow/formatter classes, and are used to test them.
+    """
+    #Defines the needed format for test cases
     test_case_format = {}
     def run(self, cls, test_cases):
+        """
+        Runs the tests
+        """
         self.cls = cls
         for case in test_cases:
             self.test(**case)
 
     def test(self, **kwargs):
+        """
+        Specific test logic
+        """
+        #Look for needed arguments in test cases
         for arg in self.test_case_format.keys():
             if arg not in kwargs:
                 raise Exception("Missing required key {0} in test case".format(arg))
             assert isinstance(kwargs[arg], self.test_case_format[arg])
 
     def read_and_reformat(self, output_format, stream, stream_format):
+        """
+        Reformat data according to needed formats
+        """
+        #Find an appropriate input class
         input_cls = find_needed_input(stream_format)
         input_inst = input_cls()
         input_inst.read_input(stream)
 
+        #find a formatter class and convert data
         formatter = find_needed_formatter(stream_format, output_format)
         formatter_inst = formatter()
         formatter_inst.read_input(input_inst.get_data(), stream_format)
@@ -95,3 +115,16 @@ class SVMTester(Tester):
 
         prediction = inst.predict(data)
         assert isinstance(prediction, np.ndarray)
+
+class NaiveWorkflowTester(Tester):
+    test_case_format = {'config_file' : basestring}
+
+    def test(self, **kwargs):
+        super(NaiveWorkflowTester, self).test(**kwargs)
+        config_file = kwargs.get('config_file')
+
+        from utils.workflow import WorkflowWrapper
+        wrapper = WorkflowWrapper(config_file, self.cls)
+        wrapper.workflow.train()
+
+        assert wrapper.workflow.setup_run == True

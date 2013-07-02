@@ -1,3 +1,7 @@
+"""
+Allows for command line commands to be run and defined
+"""
+
 from optparse import OptionParser
 import sys
 import os
