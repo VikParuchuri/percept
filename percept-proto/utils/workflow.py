@@ -1,5 +1,43 @@
 from utils.registry import registry, find_in_registry
+from conf.base import settings
+from utils.input import import_from_string
 import ConfigParser
+
+class WorkflowLoader(object):
+    """
+    Loads and saves workflows
+    """
+    store = import_from_string(settings.DATASTORE)
+
+    def __init__(self):
+        self.store = self.store()
+
+    def load(self, cls, run_id):
+        """
+        Load a workflow
+        cls - workflow class (to get __name__ from)
+        run_id - id given to the specific run
+        """
+        id_code = self.generate_load_identifier(cls, run_id)
+        inst = self.store.load(id_code)
+        return inst
+
+    def save(self, obj, run_id):
+        """
+        Save a workflow
+        obj - instance of a workflow to save
+        run_id - unique id to give the run
+        """
+        id_code = self.generate_save_identifier(obj, run_id)
+        self.store.save(obj, id_code)
+
+    def generate_save_identifier(self, obj, run_id):
+        identifier = "{0}-{1}".format(obj.__class__.__name__.lower(), run_id)
+        return identifier
+
+    def generate_load_identifier(self, cls, run_id):
+        identifier = "{0}-{1}".format(cls.__name__.lower(), run_id)
+        return identifier
 
 class WorkflowWrapper(object):
     """
@@ -25,13 +63,19 @@ class WorkflowWrapper(object):
         self.target_format = config.get('targets', 'format')
 
         #Tasks is a list, so split by comma
-        tasks = config.get('tasks', 'list')
-        tasks = tasks.split(",")
+        task_names = config.get('tasks', 'list')
+        self.task_names = task_names.split(",")
 
-        self.run_id = config.get('tasks', 'run_id')
+        self.run_id = config.get('meta', 'run_id')
+        self.save_flow = config.get('meta', 'save_flow').lower() == "true"
+        self.load_previous_flow = config.get('meta', 'load_previous_flow').lower() == "true"
+        self.predict = config.get('meta', 'predict').lower() == "true"
+        if self.predict:
+            self.predict_file = config.get('predict', 'file')
+            self.predict_format = config.get('predict', 'format')
 
-        self.setup_tasks(tasks)
-        self.initialize_workflow(workflow)
+        self.workflow_loader = WorkflowLoader()
+        self.workflow = workflow
 
     def setup_tasks(self, tasks):
         """
@@ -68,3 +112,22 @@ class WorkflowWrapper(object):
         if not filename.startswith("/"):
             filename = self.config_file_format.format(config_file, filename)
         return filename
+
+    def setup(self):
+        if self.load_previous_flow:
+            self.load()
+        else:
+           self.train_workflow()
+        if self.save_flow:
+            self.save()
+
+    def train_workflow(self):
+        self.setup_tasks(self.task_names)
+        self.initialize_workflow(self.workflow)
+        self.workflow.train()
+
+    def save(self):
+        self.workflow_loader.save(self.workflow, self.run_id)
+
+    def load(self):
+        self.workflow = self.workflow_loader.load(self.workflow, self.run_id)
