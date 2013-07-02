@@ -13,11 +13,13 @@ class WorkflowWrapper(object):
     """
     workflow = NaiveWorkflow
 
-    def __init__(self, input_file, input_format, target_file, target_format, tasks):
+    def __init__(self, input_file, input_format, target_file, target_format, tasks, run_id):
         self.input_file = input_file
         self.input_format = input_format
         self.target_file = target_file
         self.target_format = target_format
+        self.run_id = run_id
+
         self.setup_tasks(tasks)
         self.initialize_workflow()
 
@@ -37,6 +39,7 @@ class WorkflowWrapper(object):
         self.workflow.input_format = self.input_format
         self.workflow.target_file = self.target_file
         self.workflow.target_format = self.target_format
+        self.workflow.run_id = self.run_id
 
         self.workflow.setup()
 
@@ -57,11 +60,13 @@ class Command(BaseCommand):
 
         tasks = config.get('tasks', 'list')
         tasks = tasks.split(",")
-        wrapper = WorkflowWrapper(input_file, input_format, target_file, target_format, tasks)
+
+        run_id = config.get('tasks', 'run_id')
+        wrapper = WorkflowWrapper(input_file, input_format, target_file, target_format, tasks, run_id)
         wrapper.workflow.train()
 
         loader = WorkflowLoader()
-        loader.save(wrapper.workflow, settings.RUN_ID)
+        loader.save(wrapper.workflow, run_id)
 
     def reformat_filepath(self, config_file, filename):
         if not filename.startswith("/"):

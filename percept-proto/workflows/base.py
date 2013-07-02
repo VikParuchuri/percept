@@ -42,6 +42,7 @@ class BaseWorkflow(object):
     target_file = ""
     target_format = DataFormats.csv
     tasks = []
+    run_id = ""
 
     def __init__(self, **kwargs):
         self.runner = self.runner()

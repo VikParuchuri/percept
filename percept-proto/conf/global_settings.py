@@ -27,9 +27,6 @@ MODULE_VARIABLE = "PERCEPT_SETTINGS_MODULE"
 #Namespace to give the modules in the registry
 NAMESPACE = "percept"
 
-#Can be used as a prefix when saving workflows
-RUN_ID = "run1"
-
 #Used to save and retrieve workflows and other data
 DATA_PATH = os.path.abspath(os.path.join(REPO_PATH, "stored_data"))
 if not os.path.exists(DATA_PATH):
