@@ -15,7 +15,7 @@ log = logging.getLogger(__name__)
 class SVMTrain(Task):
     colnames = List()
     clf = Complex()
-    category = RegistryCategories.preprocessors
+    category = RegistryCategories.algorithms
     algorithm = svm.SVC
     args = {'C' : 1.0}
     tester = SVMTester

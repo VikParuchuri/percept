@@ -3,7 +3,7 @@ from utils.models import find_needed_formatter, find_needed_input
 from collections import namedtuple
 from conf.base import settings
 
-TrainedDependency = namedtuple('DependencyResult', ['category', 'namespace', 'name', 'inst'], verbose=True)
+TrainedDependency = namedtuple('DependencyResult', ['category', 'namespace', 'name', 'inst'], verbose=False)
 
 class WorkflowLoader(object):
     """
@@ -21,10 +21,10 @@ class WorkflowLoader(object):
 
     def save(self, obj, run_id):
         id_code = self.generate_save_identifier(obj, run_id)
-        self.store.save(id_code)
+        self.store.save(obj, id_code)
 
     def generate_save_identifier(self, obj, run_id):
-        identifier = "{0}-{1}".format(obj.__class__.lower(), run_id)
+        identifier = "{0}-{1}".format(obj.__class__.__name__.lower(), run_id)
         return identifier
 
     def generate_load_identifier(self, cls, run_id):
@@ -41,10 +41,11 @@ class BaseWorkflow(object):
 
     def __init__(self, **kwargs):
         self.runner = self.runner()
-        self.reformatted_input = self.reformat_input()
+        self.setup_run = False
 
-    def setup(self, tasks, **kwargs):
-        self.tasks = tasks
+    def setup(self):
+        self.reformatted_input = self.reformat_input()
+        self.setup_run = True
 
     def find_dependencies(self, task):
         dependencies = task.dependencies
@@ -77,6 +78,8 @@ class BaseWorkflow(object):
         return result
 
     def train(self, **kwargs):
+        if not self.setup_run:
+            self.setup()
         self.trained_tasks = []
         for task in self.tasks:
             data = self.reformatted_input[task.data_format]['data']
@@ -96,8 +99,8 @@ class BaseWorkflow(object):
             results.append(self.execute_predict_task(task_inst, **kwargs))
         return results
 
-    def find_input(self):
-        input_cls = find_needed_input(self.input_format)
+    def find_input(self, input_format):
+        input_cls = find_needed_input(input_format)
         return input_cls
 
     def read_input(self, input_cls, filename, **kwargs):
@@ -107,16 +110,22 @@ class BaseWorkflow(object):
         return input_inst.get_data()
 
     def reformat_file(self, input_file, input_format, output_format):
+
+        #Find the needed input class and read the input stream
+        input_cls = self.find_input(input_format)
+        input_inst = input_cls()
+        input_inst.read_input(self.open_file(input_file))
+
         formatter = find_needed_formatter(input_format, output_format)
         if formatter is None:
             raise Exception("Cannot find a formatter that can convert from {0} to {1}".format(self.input_format, output_format))
         formatter_inst = formatter()
-        formatter_inst.read_input(self.open_file(input_file), input_format)
+        formatter_inst.read_input(input_inst.get_data(), input_format)
         data = formatter_inst.get_data(output_format)
         return data
 
     def open_file(self, input_file):
-        return open(input_file).read()
+        return open(input_file)
 
     def reformat_input(self, **kwargs):
         reformatted_input = {}
