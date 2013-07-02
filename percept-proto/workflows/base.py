@@ -3,6 +3,7 @@ from utils.models import find_needed_formatter, find_needed_input
 from collections import namedtuple
 from conf.base import settings
 import logging
+import os
 
 log = logging.getLogger(__name__)
 
@@ -132,7 +133,7 @@ class BaseWorkflow(object):
         return data
 
     def open_file(self, input_file):
-        return open(input_file)
+        return open(os.path.abspath(input_file))
 
     def reformat_input(self, **kwargs):
         reformatted_input = {}

@@ -2,6 +2,7 @@ from management.commands import BaseCommand
 from utils.registry import registry, find_in_registry
 from workflows.base import NaiveWorkflow, WorkflowLoader
 from conf.base import settings
+import ConfigParser
 
 import logging
 log = logging.getLogger(__name__)
@@ -40,14 +41,31 @@ class WorkflowWrapper(object):
         self.workflow.setup()
 
 class Command(BaseCommand):
-    args = 'input_file input_format target_file target_format tasks'
+    args = 'config_file'
+    config_file_format = "{0}/../{1}"
+
     def command(self, *args, **options):
-        input_file, input_format, target_file, target_format = args[0:4]
-        tasks = args[4:]
+        config_file = args[0]
+        config = ConfigParser.SafeConfigParser()
+        config.read(config_file)
+
+        input_file = self.reformat_filepath(config_file, config.get('inputs', 'file'))
+        input_format = config.get('inputs', 'format')
+
+        target_file = self.reformat_filepath(config_file, config.get('targets', 'file'))
+        target_format = config.get('targets', 'format')
+
+        tasks = config.get('tasks', 'list')
+        tasks = tasks.split(",")
         wrapper = WorkflowWrapper(input_file, input_format, target_file, target_format, tasks)
         wrapper.workflow.train()
 
         loader = WorkflowLoader()
         loader.save(wrapper.workflow, settings.RUN_ID)
+
+    def reformat_filepath(self, config_file, filename):
+        if not filename.startswith("/"):
+            filename = self.config_file_format.format(config_file, filename)
+        return filename
 
 
