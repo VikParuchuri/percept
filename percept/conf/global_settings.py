@@ -50,6 +50,9 @@ INSTALLED_APPS = [
     'percept.tests'
 ]
 
+PROJECT_TEMPLATE_DIR = os.path.join(PACKAGE_PATH, "project_template")
+PROJECT_TEMPLATE_NAME = "project_template"
+
 #Setup logger configuration
 DEFAULT_LOGGING = {
     'version': 1,

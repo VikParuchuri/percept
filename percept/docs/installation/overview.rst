@@ -18,6 +18,12 @@ See :doc:`usage` for usage instructions.
 
 You can skip the virtualenv commands if you like, but they will be a major help in keeping the packages for this repo separate from the rest of your system.
 
+If you want to easily import the package, do this in the directory you cloned to::
+    $ python setup.py install
+
+This will install percept as a python package, and will allow you to import it in other projects using::
+    $ import percept
+
 PyPi
 ----------------------------------
 
