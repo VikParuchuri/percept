@@ -10,6 +10,14 @@ import inspect
 
 log = logging.getLogger(__name__)
 
+def get_task_name(obj):
+    try:
+        name = "{0}.{1}.{2}".format(obj.category, obj.namespace, obj.name)
+    except AttributeError:
+        name = obj.__class__.__name__
+
+    return name
+
 def find_needed_formatter(input_format, output_format):
     """
     Find a data formatter given an input and output format

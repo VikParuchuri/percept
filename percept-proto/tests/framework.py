@@ -125,6 +125,6 @@ class NaiveWorkflowTester(Tester):
 
         from utils.workflow import WorkflowWrapper
         wrapper = WorkflowWrapper(config_file, self.cls)
-        wrapper.workflow.train()
+        wrapper.run()
 
         assert wrapper.workflow.setup_run == True

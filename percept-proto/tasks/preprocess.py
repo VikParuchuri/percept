@@ -26,6 +26,8 @@ class Normalize(Task):
     test_cases = [{'stream' : os.path.abspath(os.path.join(settings.PACKAGE_PATH,'tests/data/csv/1/data.csv')), 'dataformat' : DataFormats.csv}]
     data = Complex()
 
+    help_text = "Example class to normalize input values."
+
     def train(self, data, **kwargs):
         """
         Calculate the standard deviations and means in the training data

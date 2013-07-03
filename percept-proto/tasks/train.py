@@ -33,6 +33,7 @@ class SVMTrain(Task):
             'dataformat' : DataFormats.csv
         }
     ]
+    help_text = "Example class to train and predict with SVM."
 
     def train(self, data, target, **kwargs):
         self.colnames = [t for t in data.columns]

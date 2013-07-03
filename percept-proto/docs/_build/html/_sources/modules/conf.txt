@@ -1,0 +1,11 @@
+##############
+Conf
+##############
+
+Base
+-----------------------------
+.. autoclass:: conf.base
+    :members: _initialize
+    :inherited-members:
+    :undoc-members:
+

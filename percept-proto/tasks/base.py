@@ -35,6 +35,8 @@ class Task(FieldModel):
     #Cached field
     data = Dict()
 
+    help_text = "Base task class. Do not use directly."
+
     def __init__(self, **kwargs):
         super(Task,self).__init__(**kwargs)
 

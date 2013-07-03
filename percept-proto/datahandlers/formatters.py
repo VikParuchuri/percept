@@ -27,6 +27,8 @@ class BaseFormat(FieldModel):
     category = RegistryCategories.formatters
     namespace = settings.NAMESPACE
 
+    help_text = "Base class for reformatting input data.  Do not use directly."
+
     def __init__(self, **kwargs):
         super(BaseFormat, self).__init__(**kwargs)
         self.input_formats = []
@@ -75,6 +77,8 @@ class JSONFormat(BaseFormat):
     #Tester and test_cases are used by the testing framework.  See tests.framework
     tester = JSONFormatTester
     test_cases = [{'stream' : os.path.abspath(os.path.join(settings.PACKAGE_PATH,'tests/data/csv/1/data.csv')), 'dataformat' : DataFormats.csv}]
+
+    help_text = "Example class to convert from csv to dataframe."
 
     def from_csv(self, input_data):
         """
