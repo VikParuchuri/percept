@@ -36,9 +36,9 @@ for dirpath, dirnames, filenames in os.walk(percept_dir):
 
 with open('requirements.txt') as f:
     required = f.read().splitlines()
-
-print packages
-print package_data
+with open('base_requirements.txt') as f:
+    required += f.read().splitlines()
+required = [r for r in required if not r.startswith("-r")]
 
 setup(
     name = "percept",

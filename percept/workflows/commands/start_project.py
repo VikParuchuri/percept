@@ -2,6 +2,7 @@ from percept.management.commands import BaseCommand
 import os
 from importlib import import_module
 from percept.conf.base import settings
+import re
 
 class Command(BaseCommand):
     args = 'name'
@@ -52,6 +53,7 @@ class Command(BaseCommand):
 
                 with open(old_path, 'rb') as template_file:
                     content = template_file.read()
+                    content = content.replace(settings.PROJECT_TEMPLATE_NAME, name)
                 with open(new_path, 'wb') as new_file:
                     new_file.write(content)
         print "Finished creating project {0}.".format(name)
