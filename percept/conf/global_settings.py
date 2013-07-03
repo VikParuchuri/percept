@@ -39,6 +39,9 @@ if not os.path.exists(DATA_PATH):
 #What severity of error to log to file and console.  One of "DEBUG", "WARN", "INFO", "ERROR"
 LOG_LEVEL = "DEBUG"
 
+#Modules to not include in coverage stats
+DO_NOT_COVER = ["conf", "management"]
+
 #Commands are discovered here, and tasks/inputs/formats are imported using only these modules
 INSTALLED_APPS = [
     'percept.datahandlers',
