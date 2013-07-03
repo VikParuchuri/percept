@@ -9,4 +9,4 @@ before_install:
 install:
   - pip install -r base_requirements.txt
   - sudo apt-get install python-numpy python-scipy
-script:  nosetests -v percept
+script:  cd percept && python manage.py test False --settings=tests.test_settings --pythonpath=`pwd`
