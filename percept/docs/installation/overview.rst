@@ -4,8 +4,8 @@ Installation Overview
 
 This assumes that you already have git installed on your computer. The main steps are::
 
-	$ git clone git://github.com/equirio/percept-proto.git
-	$ cd percept-proto
+	$ git clone git://github.com/equirio/percept.git
+	$ cd percept
 	$ xargs -a apt-packages.txt apt-get install
 	$ virtualenv /path/to/percept
 	$ source /path/to/percept/bin/activate

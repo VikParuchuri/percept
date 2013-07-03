@@ -12,15 +12,15 @@ PACKAGE_PATH = FOLDER_PATH.dirname()
 REPO_PATH = PACKAGE_PATH.dirname()
 
 #Where to cache values during the run
-CACHE = "percept-proto.fields.caches.MemoryCache"
+CACHE = "percept.fields.caches.MemoryCache"
 #Do we use json to serialize the values in in the cache?
 SERIALIZE_CACHE_VALUES = False
 
 #How to run the workflows
-RUNNER = "percept-proto.workflows.runners.SingleThreadedRunner"
+RUNNER = "percept.workflows.runners.SingleThreadedRunner"
 
 #What to use as a datastore
-DATASTORE = "percept-proto.workflows.datastores.FileStore"
+DATASTORE = "percept.workflows.datastores.FileStore"
 
 #Append these settings to sys.path
 PATH_SETTINGS = ["REPO_PATH", "PACKAGE_PATH"]
@@ -41,10 +41,10 @@ LOG_LEVEL = "DEBUG"
 
 #Commands are discovered here, and tasks/inputs/formats are imported using only these modules
 INSTALLED_APPS = [
-    'percept-proto.datahandlers',
-    'percept-proto.tasks',
-    'percept-proto.workflows',
-    'percept-proto.tests'
+    'percept.datahandlers',
+    'percept.tasks',
+    'percept.workflows',
+    'percept.tests'
 ]
 
 #Setup logger configuration
