@@ -7,7 +7,7 @@ Percept is a modular machine learning framework that allows for easy testing and
 
 Documentation
 ---------------------
-You can find documentation, including installation and usage guides, in the docs folder, or you can find the build version online at [readthedocs](percept.readthedocs.org).
+You can find documentation, including installation and usage guides, in the docs folder, or you can find the build version online at [readthedocs](http://percept.readthedocs.org).
 
 Mailing List/IRC Channel
 ---------------------
