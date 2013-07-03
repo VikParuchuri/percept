@@ -45,7 +45,7 @@ setup(
     version = "0.11",
     author = "Equirio",
     author_email = "vik@equirio.com",
-    description = "Platform for generic machine learning tasks.",
+    description = "Modular machine learning framework that is easy to test and deploy.",
     license = "AGPL",
     keywords = "ml machine learning nlp ai algorithm",
     url = "https://github.com/equirio/percept",
