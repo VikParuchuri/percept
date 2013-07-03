@@ -10,4 +10,4 @@ The goals are to create an easy to use tool that can aid in a lot of the pain po
 #. Reusability
 #. Deployment
 
-Percept is open source under an AGPL license.
+Percept is open source under an AGPL license.  The AGPL is used because percept is still under active development.  Alternate licensing is possible; contact vik@equirio.com.
