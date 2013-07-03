@@ -46,7 +46,10 @@ class Settings(object):
             #Grab uppercased settings as set them as self attrs
             for setting in dir(mod):
                 if setting == setting.upper():
-                    setattr(self, setting, getattr(mod, setting))
+                    if setting == "INSTALLED_APPS":
+                        self.INSTALLED_APPS += getattr(mod, setting)
+                    else:
+                        setattr(self, setting, getattr(mod, setting))
                     self.settings_list.append(setting)
 
         #If PATH_SETTINGS is in the settings file, extend the system path to include it
