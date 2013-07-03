@@ -42,7 +42,7 @@ print package_data
 
 setup(
     name = "percept",
-    version = "0.1",
+    version = "0.11",
     author = "Equirio",
     author_email = "vik@equirio.com",
     description = "Platform for generic machine learning tasks.",
