@@ -5,6 +5,10 @@ Overview
 ---------------------
 Percept is a modular machine learning framework that allows for easy testing and deployment.  This is licensed under the AGPL, please see LICENSE.txt for details.
 
+Documentation
+---------------------
+You can find documentation, including installation and usage guides, in the docs folder, or you can find the build version online at [readthedocs](percept.readthedocs.org).
+
 Mailing List/IRC Channel
 ---------------------
 Feel free to open an issue in the issue tracker, or use [this link](http://webchat.freenode.net/?channels=#equirio) to access an IRC chat room about this project.  Alternatively, you can use your own IRC chat client and point it at freenode(chat.freenode.net).  The channel is #equirio.
