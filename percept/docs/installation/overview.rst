@@ -2,6 +2,8 @@
 Installation Overview
 =================================
 
+Manual - Recommended
+--------------------------------
 This assumes that you already have git installed on your computer. The main steps are::
 
 	$ git clone git://github.com/equirio/percept.git
@@ -15,3 +17,14 @@ This assumes that you already have git installed on your computer. The main step
 See :doc:`usage` for usage instructions.
 
 You can skip the virtualenv commands if you like, but they will be a major help in keeping the packages for this repo separate from the rest of your system.
+
+PyPi
+----------------------------------
+
+You can find the percept package `here <https://pypi.python.org/pypi/percept/0.1>`_.
+
+Install by doing::
+
+    $ pip install percept
+
+You may need to manually install the requirements afterwards.

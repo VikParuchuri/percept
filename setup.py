@@ -52,4 +52,5 @@ setup(
     include_package_data = True,
     packages=packages,
     package_data=package_data,
+    scripts=['percept/bin/percept-admin.py'],
     )
