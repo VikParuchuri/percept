@@ -20,7 +20,6 @@ import sys, os
 
 sys.path.append(os.path.abspath('../'))
 sys.path.append(os.path.abspath('../../'))
-from conf.base import settings
 
 # -- General configuration -----------------------------------------------------
 
