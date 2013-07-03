@@ -3,8 +3,8 @@ Define fields for tasks and formatters
 """
 
 import json
-from utils.input import import_from_string
-from conf.base import settings
+from percept.utils.input import import_from_string
+from percept.conf.base import settings
 import logging
 import pickle
 

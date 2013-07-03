@@ -7,6 +7,8 @@ Percept can be used either programatically, or via the command line.
 Command line
 ---------------------------------
 
+These should all be run from the directory where percept was cloned.  If you installed via pip, substitute `percept-admin.py` for `python manage.py` .
+
 Run automated tests::
 
     $ python manage.py test --pythonpath=`pwd` --settings=tests.test_settings

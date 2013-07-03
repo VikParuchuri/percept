@@ -4,12 +4,12 @@ Data inputs.  Take in data, and do any cleanup needed for the formatters to work
 
 import csv
 
-from fields.base import Dict
-from utils.models import FieldModel
-from conf.base import settings
-from utils.input import DataFormats
-from utils.models import RegistryCategories
-from tests.framework import CSVInputTester
+from percept.fields.base import Dict
+from percept.utils.models import FieldModel
+from percept.conf.base import settings
+from percept.utils.input import DataFormats
+from percept.utils.models import RegistryCategories
+from percept.tests.framework import CSVInputTester
 import os
 
 class BaseInput(FieldModel):

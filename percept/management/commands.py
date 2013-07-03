@@ -73,7 +73,7 @@ class BaseCommand(object):
         self.execute(*args, **options.__dict__)
 
     def execute(self, *args, **options):
-        from conf.base import settings
+        from percept.conf.base import settings
         self.command(*args, **options)
 
     def command(self, *args, **options):

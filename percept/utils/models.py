@@ -3,7 +3,7 @@ Model and registry utility functions
 """
 
 import inspect
-from conf.base import settings
+from percept.conf.base import settings
 import logging
 from collections import namedtuple
 import inspect

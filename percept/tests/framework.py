@@ -4,8 +4,8 @@ Testing framework
 
 import logging
 log = logging.getLogger(__name__)
-from utils.registry import registry, find_in_registry
-from utils.models import RegistryCategories, find_needed_formatter, find_needed_input
+from percept.utils.registry import registry, find_in_registry
+from percept.utils.models import RegistryCategories, find_needed_formatter, find_needed_input
 import numpy as np
 
 class Tester(object):
@@ -123,7 +123,7 @@ class NaiveWorkflowTester(Tester):
         super(NaiveWorkflowTester, self).test(**kwargs)
         config_file = kwargs.get('config_file')
 
-        from utils.workflow import WorkflowWrapper
+        from percept.utils.workflow import WorkflowWrapper
         wrapper = WorkflowWrapper(config_file, self.cls)
         wrapper.run()
 

@@ -4,13 +4,13 @@ Preprocess data before sending to algorithms
 
 from __future__ import division
 from base import Task
-from fields.base import List, Complex
+from percept.fields.base import List, Complex
 import numpy as np
-from conf.base import settings
-from utils.models import RegistryCategories
-from tests.framework import NormalizationTester
+from percept.conf.base import settings
+from percept.utils.models import RegistryCategories
+from percept.tests.framework import NormalizationTester
 import os
-from utils.input import DataFormats
+from percept.utils.input import DataFormats
 import logging
 
 log = logging.getLogger(__name__)
