@@ -2,9 +2,9 @@
 List all available tasks
 """
 
-from management.commands import BaseCommand
-from utils.registry import registry, find_in_registry
-from utils.models import get_task_name
+from percept.management.commands import BaseCommand
+from percept.utils.registry import registry, find_in_registry
+from percept.utils.models import get_task_name
 
 import logging
 log = logging.getLogger(__name__)

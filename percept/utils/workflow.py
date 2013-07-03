@@ -1,7 +1,7 @@
-from utils.registry import registry, find_in_registry
-from conf.base import settings
-from utils.input import import_from_string
-from utils.models import get_task_name
+from percept.utils.registry import registry, find_in_registry
+from percept.conf.base import settings
+from percept.utils.input import import_from_string
+from percept.utils.models import get_task_name
 import ConfigParser
 
 class WorkflowLoader(object):

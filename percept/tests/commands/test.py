@@ -3,8 +3,8 @@ Command line command to run tests
 """
 
 import nose
-from management.commands import BaseCommand
-from conf.base import settings
+from percept.management.commands import BaseCommand
+from percept.conf.base import settings
 import pkgutil
 from importlib import import_module
 from optparse import make_option
@@ -14,8 +14,11 @@ import os
 class Command(BaseCommand):
     args = 'cover'
     def command(self, *args, **options):
-        cover = args[0]
-        cover = cover.lower() == "true"
+        try:
+            cover = args[0]
+            cover = cover.lower() == "true"
+        except IndexError:
+            cover = False
         if cover:
             #Grab the pythonpath argument and look for tests there
             app_names = settings.INSTALLED_APPS

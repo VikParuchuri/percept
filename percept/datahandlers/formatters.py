@@ -4,13 +4,13 @@ Data formatters.  Will take data from many formats, pass through a common format
 
 from pandas import DataFrame
 import numpy as np
-from utils.models import FieldModel
+from percept.utils.models import FieldModel
 
-from fields.base import Dict
-from conf.base import settings
-from utils.models import RegistryCategories
-from utils.input import DataFormats
-from tests.framework import JSONFormatTester
+from percept.fields.base import Dict
+from percept.conf.base import settings
+from percept.utils.models import RegistryCategories
+from percept.utils.input import DataFormats
+from percept.tests.framework import JSONFormatTester
 import os
 import re
 import logging

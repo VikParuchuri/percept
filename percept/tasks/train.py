@@ -3,14 +3,14 @@ Machine learning algorithms to train and predict
 """
 
 from base import Task
-from fields.base import Complex, List
+from percept.fields.base import Complex, List
 import numpy as np
 from sklearn import svm
-from conf.base import settings
-from utils.models import RegistryCategories
-from tests.framework import SVMTester
+from percept.conf.base import settings
+from percept.utils.models import RegistryCategories
+from percept.tests.framework import SVMTester
 import os
-from utils.input import DataFormats
+from percept.utils.input import DataFormats
 
 import logging
 

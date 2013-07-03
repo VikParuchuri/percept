@@ -2,7 +2,7 @@
 Runs tests
 """
 
-from utils.registry import registry
+from percept.utils.registry import registry
 import logging
 
 log = logging.getLogger(__name__)

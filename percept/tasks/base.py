@@ -2,11 +2,11 @@
 Tasks are run on data, and can include transforms and algorithms
 """
 
-from fields.base import Dict, List, Int, Boolean, String
-from utils.models import FieldModel
-from utils.input import DataFormats
-from conf.base import settings
-from utils.models import RegistryCategories
+from percept.fields.base import Dict, List, Int, Boolean, String
+from percept.utils.models import FieldModel
+from percept.utils.input import DataFormats
+from percept.conf.base import settings
+from percept.utils.models import RegistryCategories
 from collections import namedtuple
 
 import logging

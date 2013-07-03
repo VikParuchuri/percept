@@ -65,7 +65,7 @@ def get_commands():
 
     #Try to load the settings file (settings can be specified on the command line) and get the INSTALLED_APPS
     try:
-        from conf.base import settings
+        from percept.conf.base import settings
         apps = settings.INSTALLED_APPS
     except KeyError:
         apps = []

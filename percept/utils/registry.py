@@ -2,10 +2,10 @@
 Search through modules and add to the registry
 """
 
-import conf.base
+from percept.conf.base import settings
 import pkgutil
 from importlib import import_module
-from utils.models import registry
+from percept.utils.models import registry
 import logging
 log = logging.getLogger(__name__)
 
@@ -13,7 +13,7 @@ def import_task_modules():
     """
     Import all installed apps and add modules to registry
     """
-    top_level_modules = conf.base.settings.INSTALLED_APPS
+    top_level_modules = settings.INSTALLED_APPS
     module_names = []
     for module in top_level_modules:
         #Import package

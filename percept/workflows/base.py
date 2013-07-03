@@ -2,11 +2,11 @@
 Workflows allow us to run tasks
 """
 
-from utils.input import import_from_string, DataFormats
-from utils.models import find_needed_formatter, find_needed_input, RegistryCategories, MetaFieldModel, get_task_name
+from percept.utils.input import import_from_string, DataFormats
+from percept.utils.models import find_needed_formatter, find_needed_input, RegistryCategories, MetaFieldModel, get_task_name
 from collections import namedtuple
-from conf.base import settings
-from tests.framework import NaiveWorkflowTester
+from percept.conf.base import settings
+from percept.tests.framework import NaiveWorkflowTester
 import logging
 import os
 
