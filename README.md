@@ -20,7 +20,7 @@ How to Contribute
 Contributions are very welcome. The easiest way is to fork this repo, and then
 make a pull request from your fork.
 
-The current backlog is in the [issues section](http://github.com/equirio/percept-proto/issues?labels=&page=1&state=open).
+The current backlog is in the [issues section](http://github.com/equirio/percept/issues?labels=&page=1&state=open).
 Please feel free to open new issues or work on existing ones.
 
 Reporting Security Issues

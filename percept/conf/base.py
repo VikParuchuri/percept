@@ -13,7 +13,7 @@ log = logging.getLogger(__name__)
 
 class Settings(object):
     """
-    Configuration class for percept-proto
+    Configuration class for percept
     """
     settings_list = None
 

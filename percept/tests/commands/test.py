@@ -22,7 +22,7 @@ class Command(BaseCommand):
             mod = import_module(al)
             app_paths.append(os.path.dirname(mod.__file__))
         #Pass paths to pkgutil to get the names of the submodules
-        sub_labels = [name for _, name, _ in pkgutil.iter_modules(app_paths)]
+        sub_labels = [name for _, name, _ in pkgutil.iter_modules(app_paths) if name not in settings.DO_NOT_COVER]
         #Produce a coverage report for installed_apps
         argv = ['{0}'.format(options['pythonpath']), '--with-coverage', '--cover-package={0}'.format(','.join(app_labels + sub_labels))]
         nose.run(argv=argv)
