@@ -44,8 +44,11 @@ def find_commands_module(app_name):
         if os.path.basename(os.getcwd()) != part:
             raise e
         else:
-            if f:
-                f.close()
+            try:
+                if f:
+                    f.close()
+            except UnboundLocalError:
+                log.error("Could not import module {0} at path {1}.  Sys.path is {2}".format(part, path, sys.path))
 
     #Go down level by and level and try to load the module at each level
     while parts:

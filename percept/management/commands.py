@@ -5,7 +5,9 @@ Allow for the creation of custom command line commands
 from optparse import make_option, OptionParser
 import sys
 import os
+import logging
 
+log = logging.getLogger(__name__)
 def handle_default_options(options):
     """
     Pass in a Values instance from OptionParser.  Handle settings and pythonpath
@@ -16,7 +18,8 @@ def handle_default_options(options):
         os.environ['PERCEPT_SETTINGS_MODULE'] = options.settings
     if options.pythonpath:
         #Append the pythonpath and the directory one up from the pythonpath to sys.path for importing
-        pythonpath = os.path.abspath(options.pythonpath)
+
+        pythonpath = os.path.abspath(os.path.expanduser(options.pythonpath))
         up_one_path = os.path.abspath(os.path.join(pythonpath, ".."))
         sys.path.append(pythonpath)
         sys.path.append(up_one_path)

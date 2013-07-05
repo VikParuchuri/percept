@@ -23,14 +23,6 @@ class Command(BaseCommand):
         except OSError:
             raise Exception("Could not make directory {0}".format(project_dir))
 
-        folders_to_make = [name]
-
-        for folder in folders_to_make:
-            try:
-                os.makedirs(os.path.join(project_dir, folder))
-            except OSError:
-                raise Exception("Could not make directory {0}".format(project_dir))
-
         project_template_dir = settings.PROJECT_TEMPLATE_DIR
         prefix_length = len(project_template_dir) + 1
 
