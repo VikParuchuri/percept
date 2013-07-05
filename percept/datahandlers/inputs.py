@@ -52,14 +52,14 @@ class CSVInput(BaseInput):
 
     help_text = "Example class to load in csv files."
 
-    def read_input(self, stream, has_header=True):
+    def read_input(self, filename, has_header=True):
         """
-        stream is any reader object that exposes the .read() interface
+        filename is any filename, or something on which open() can be called
         for example:
         csv_input = CSVInput()
-        csv_input.read_input(open("csvfile.csv"))
+        csv_input.read_input("csvfile.csv")
         """
-
+        stream = open(filename)
         reader = csv.reader(stream)
         csv_data = []
         for (i, row) in enumerate(reader):
