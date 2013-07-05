@@ -3,7 +3,7 @@ Workflows allow us to run tasks
 """
 
 from percept.utils.input import import_from_string, DataFormats
-from percept.utils.models import find_needed_formatter, find_needed_input, RegistryCategories, MetaFieldModel, get_task_name
+from percept.utils.models import find_needed_formatter, find_needed_input, RegistryCategories, MetaFieldModel, get_task_name, get_namespace
 from collections import namedtuple
 from percept.conf.base import settings
 from percept.tests.framework import NaiveWorkflowTester
@@ -22,7 +22,7 @@ class BaseWorkflow(object):
     __metaclass__ = MetaFieldModel
     #category, namespace, name for the registry
     category = RegistryCategories.base
-    namespace = settings.NAMESPACE
+    namespace = get_namespace(__module__)
     name = __name__.lower()
 
     #Defines how tasks are run
@@ -140,9 +140,8 @@ class BaseWorkflow(object):
         input_cls - the class to use to read the input
         filename - input filename
         """
-        input_data = open(filename)
         input_inst = input_cls()
-        input_inst.read_input(input_data)
+        input_inst.read_input(filename)
         return input_inst.get_data()
 
     def reformat_file(self, input_file, input_format, output_format):
@@ -161,7 +160,7 @@ class BaseWorkflow(object):
             return None
         #If the input file cannot be found, return None
         try:
-            input_inst.read_input(self.open_file(input_file))
+            input_inst.read_input(self.absolute_filepath(input_file))
         except IOError:
             return None
 
@@ -173,12 +172,12 @@ class BaseWorkflow(object):
         data = formatter_inst.get_data(output_format)
         return data
 
-    def open_file(self, input_file):
+    def absolute_filepath(self, input_file):
         """
-        Open the input file
+        Gets absolute path of a file
         """
         #abspath needed to avoid relative path issues
-        return open(os.path.abspath(input_file))
+        return os.path.abspath(input_file)
 
     def reformat_predict_data(self, **kwargs):
         reformatted_predict = {}

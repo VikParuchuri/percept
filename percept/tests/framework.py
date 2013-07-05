@@ -53,7 +53,7 @@ class CSVInputTester(Tester):
 
     def test(self, **kwargs):
         super(CSVInputTester, self).test(**kwargs)
-        stream = open(kwargs.get('stream'))
+        stream = kwargs.get('stream')
         inst = self.cls()
         inst.read_input(stream)
         assert isinstance(inst.data, list)
@@ -63,7 +63,7 @@ class JSONFormatTester(Tester):
 
     def test(self, **kwargs):
         super(JSONFormatTester, self).test(**kwargs)
-        stream = open(kwargs.get('stream'))
+        stream = kwargs.get('stream')
         dataformat = kwargs.get('dataformat')
         inst = self.cls()
         selected_registry = find_in_registry(category = RegistryCategories.inputs)
@@ -81,7 +81,7 @@ class NormalizationTester(Tester):
 
     def test(self, **kwargs):
         super(NormalizationTester, self).test(**kwargs)
-        stream = open(kwargs.get('stream'))
+        stream = kwargs.get('stream')
         dataformat = kwargs.get('dataformat')
         inst = self.cls()
         output_format = inst.data_format
@@ -101,8 +101,8 @@ class SVMTester(Tester):
 
     def test(self, **kwargs):
         super(SVMTester, self).test(**kwargs)
-        datafile = open(kwargs.get('data'))
-        targetfile = open(kwargs.get('target'))
+        datafile = kwargs.get('data')
+        targetfile = kwargs.get('target')
         dataformat = kwargs.get('dataformat')
 
         inst = self.cls()

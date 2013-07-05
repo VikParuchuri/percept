@@ -44,8 +44,11 @@ def find_commands_module(app_name):
         if os.path.basename(os.getcwd()) != part:
             raise e
         else:
-            if f:
-                f.close()
+            try:
+                if f:
+                    f.close()
+            except UnboundLocalError:
+                log.error("Could not import module {0} at path {1}.  Sys.path is {2}".format(part, path, sys.path))
 
     #Go down level by and level and try to load the module at each level
     while parts:
@@ -138,7 +141,7 @@ class Management(object):
         #Parse the options
         options, args = parser.parse_args(self.argv)
         #Handle --settings and --pythonpath properly
-        handle_default_options(options)
+        options = handle_default_options(options)
 
         try:
             #Get the name of the subcommand

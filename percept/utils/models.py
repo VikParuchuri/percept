@@ -10,6 +10,9 @@ import inspect
 
 log = logging.getLogger(__name__)
 
+def get_namespace(mod):
+    return mod.split('.')[0]
+
 def get_task_name(obj):
     try:
         name = "{0}.{1}.{2}".format(obj.category, obj.namespace, obj.name)
@@ -101,7 +104,7 @@ class FieldModel(object):
     """
     __metaclass__ = MetaFieldModel
     category = RegistryCategories.base
-    namespace = settings.NAMESPACE
+    namespace = get_namespace(__module__)
     name = __name__.lower()
 
     def __init__(self, **kwargs):
