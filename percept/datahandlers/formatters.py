@@ -16,6 +16,13 @@ import re
 import logging
 log = logging.getLogger(__name__)
 
+def is_number(n):
+    try:
+        float(n)
+        return True
+    except ValueError:
+        return False
+
 class BaseFormat(FieldModel):
     """
     Base class to reformat input data.  If implementing, add in from_ and to_ methods (see read_input and get_data)
@@ -108,7 +115,8 @@ class JSONFormat(BaseFormat):
             column_list.append(key_list)
         df = DataFrame(np.asarray(column_list).transpose(), columns=keys)
         for i in xrange(0,df.shape[0]):
-            df.iloc[i] = df.iloc[i].astype(float)
+            if is_number(df.iloc[i][0]):
+                df.iloc[i] = df.iloc[i].astype(float)
         return df
 
 

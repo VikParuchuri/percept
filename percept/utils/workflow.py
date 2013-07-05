@@ -4,6 +4,10 @@ from percept.utils.input import import_from_string
 from percept.utils.models import get_task_name
 import ConfigParser
 
+import logging
+
+log = logging.getLogger(__name__)
+
 class WorkflowLoader(object):
     """
     Loads and saves workflows
