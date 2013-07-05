@@ -8,7 +8,7 @@ from percept.fields.base import Dict
 from percept.utils.models import FieldModel
 from percept.conf.base import settings
 from percept.utils.input import DataFormats
-from percept.utils.models import RegistryCategories
+from percept.utils.models import RegistryCategories, get_namespace
 from percept.tests.framework import CSVInputTester
 import os
 
@@ -21,7 +21,7 @@ class BaseInput(FieldModel):
 
     #Used for the registry
     category = RegistryCategories.inputs
-    namespace = settings.NAMESPACE
+    namespace = get_namespace(__module__)
 
     input_format = "none"
 

@@ -19,10 +19,11 @@ def handle_default_options(options):
     if options.pythonpath:
         #Append the pythonpath and the directory one up from the pythonpath to sys.path for importing
 
-        pythonpath = os.path.abspath(os.path.expanduser(options.pythonpath))
-        up_one_path = os.path.abspath(os.path.join(pythonpath, ".."))
-        sys.path.append(pythonpath)
+        options.pythonpath = os.path.abspath(os.path.expanduser(options.pythonpath))
+        up_one_path = os.path.abspath(os.path.join(options.pythonpath, ".."))
+        sys.path.append(options.pythonpath)
         sys.path.append(up_one_path)
+    return options
 
 class BaseCommand(object):
     """
@@ -72,7 +73,7 @@ class BaseCommand(object):
         """
         parser = self.create_parser(argv[0], argv[1])
         options, args = parser.parse_args(argv[2:])
-        handle_default_options(options)
+        options = handle_default_options(options)
         self.execute(*args, **options.__dict__)
 
     def execute(self, *args, **options):

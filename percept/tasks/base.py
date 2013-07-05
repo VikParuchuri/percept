@@ -6,7 +6,7 @@ from percept.fields.base import Dict, List, Int, Boolean, String
 from percept.utils.models import FieldModel
 from percept.utils.input import DataFormats
 from percept.conf.base import settings
-from percept.utils.models import RegistryCategories
+from percept.utils.models import RegistryCategories, get_namespace
 from collections import namedtuple
 
 import logging
@@ -20,7 +20,7 @@ class Task(FieldModel):
     """
     #Used by the registry
     category = RegistryCategories.base
-    namespace = settings.NAMESPACE
+    namespace = get_namespace(__module__)
 
     #Define dependencies to run before this (results are passed into class before execution)
     dependencies = []

@@ -8,7 +8,7 @@ from percept.utils.models import FieldModel
 
 from percept.fields.base import Dict
 from percept.conf.base import settings
-from percept.utils.models import RegistryCategories
+from percept.utils.models import RegistryCategories, get_namespace
 from percept.utils.input import DataFormats
 from percept.tests.framework import JSONFormatTester
 import os
@@ -25,7 +25,7 @@ class BaseFormat(FieldModel):
 
     #Set the category and namespace for the registry
     category = RegistryCategories.formatters
-    namespace = settings.NAMESPACE
+    namespace = get_namespace(__module__)
 
     help_text = "Base class for reformatting input data.  Do not use directly."
 

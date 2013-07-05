@@ -3,7 +3,7 @@ Workflows allow us to run tasks
 """
 
 from percept.utils.input import import_from_string, DataFormats
-from percept.utils.models import find_needed_formatter, find_needed_input, RegistryCategories, MetaFieldModel, get_task_name
+from percept.utils.models import find_needed_formatter, find_needed_input, RegistryCategories, MetaFieldModel, get_task_name, get_namespace
 from collections import namedtuple
 from percept.conf.base import settings
 from percept.tests.framework import NaiveWorkflowTester
@@ -22,7 +22,7 @@ class BaseWorkflow(object):
     __metaclass__ = MetaFieldModel
     #category, namespace, name for the registry
     category = RegistryCategories.base
-    namespace = settings.NAMESPACE
+    namespace = get_namespace(__module__)
     name = __name__.lower()
 
     #Defines how tasks are run

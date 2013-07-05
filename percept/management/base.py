@@ -141,7 +141,7 @@ class Management(object):
         #Parse the options
         options, args = parser.parse_args(self.argv)
         #Handle --settings and --pythonpath properly
-        handle_default_options(options)
+        options = handle_default_options(options)
 
         try:
             #Get the name of the subcommand
