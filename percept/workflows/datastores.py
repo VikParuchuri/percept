@@ -5,6 +5,9 @@ Used to save and load workflows
 from percept.utils.input import import_from_string
 from percept.conf.base import settings
 import pickle
+import logging
+
+log = logging.getLogger(__name__)
 
 class BaseStore(object):
     """
