@@ -4,6 +4,10 @@ from percept.utils.input import import_from_string
 from percept.utils.models import get_task_name
 import ConfigParser
 
+import logging
+
+log = logging.getLogger(__name__)
+
 class WorkflowLoader(object):
     """
     Loads and saves workflows
@@ -37,7 +41,7 @@ class WorkflowLoader(object):
         self.store.save(obj, id_code)
 
     def generate_save_identifier(self, obj, run_id):
-        identifier = "{0}-{1}".format(get_task_name(obj), run_id)
+        identifier = "{0}_tasks".format(run_id)
         return identifier
 
     def generate_prediction_save_identifier(self, obj, run_id):
@@ -45,7 +49,7 @@ class WorkflowLoader(object):
         return identifier
 
     def generate_load_identifier(self, cls, run_id):
-        identifier = "{0}-{1}".format(get_task_name(cls), run_id)
+        identifier = "{0}_tasks".format(run_id)
         return identifier
 
 class WorkflowWrapper(object):

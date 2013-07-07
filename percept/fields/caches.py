@@ -2,6 +2,9 @@
 Data caching, used by fields.base
 """
 
+import logging
+log = logging.getLogger(__name__)
+
 class BaseCache(object):
     """
     Base class for datastore.  Used by fields.base to cache.

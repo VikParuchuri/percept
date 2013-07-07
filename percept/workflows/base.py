@@ -108,7 +108,6 @@ class BaseWorkflow(object):
             kwargs['target']=target
             trained_task = self.execute_train_task_with_dependencies(task, **kwargs)
             self.trained_tasks.append(trained_task)
-
             #If the trained task alters the data in any way, pass it down the chain to the next task
             if hasattr(trained_task, 'data'):
                 self.reformatted_input[task.data_format]['data'] = trained_task.data

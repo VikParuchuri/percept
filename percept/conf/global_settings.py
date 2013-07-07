@@ -53,13 +53,16 @@ INSTALLED_APPS = [
 PROJECT_TEMPLATE_DIR = os.path.join(PACKAGE_PATH, "project_template")
 PROJECT_TEMPLATE_NAME = "project_template"
 
+#Path to the project
+PROJECT_PATH = ""
+
 #Setup logger configuration
 DEFAULT_LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters' : {
         'precise' : {
-            'format' : '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+            'format' : '%(asctime)s - %(name)s - %(lineno)d - %(levelname)s - %(message)s'
         },
         'verbose' : {
             'format' : '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'

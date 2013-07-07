@@ -128,6 +128,22 @@ class FieldModel(object):
                 if member_object.required_input:
                     self.required_input.append(member_name)
 
+    def __getstate__(self):
+        self_dict = self.__dict__
+        for field in self.fields:
+            self_dict.update(
+                {
+                    field : getattr(self, field),
+                }
+            )
+        return self_dict
+
+    def __setstate__(self, state):
+        self.__dict__ = state
+        for field in self.fields:
+            setattr(self, field, getattr(self.__class__, field))
+            setattr(self, field, state[field])
+
     def get_data(self):
         data_dict = {}
         for key in self.fields:

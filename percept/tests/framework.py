@@ -4,7 +4,6 @@ Testing framework
 
 import logging
 log = logging.getLogger(__name__)
-from percept.utils.registry import registry, find_in_registry
 from percept.utils.models import RegistryCategories, find_needed_formatter, find_needed_input
 import numpy as np
 
@@ -66,6 +65,7 @@ class JSONFormatTester(Tester):
         stream = kwargs.get('stream')
         dataformat = kwargs.get('dataformat')
         inst = self.cls()
+        from percept.utils.registry import registry, find_in_registry
         selected_registry = find_in_registry(category = RegistryCategories.inputs)
         selected_input_registry = [i for i in selected_registry if i.input_format==dataformat]
         if len(selected_input_registry)>0:
