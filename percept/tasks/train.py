@@ -20,7 +20,6 @@ class SVMTrain(Task):
     """
     A class to train a support vector machine algorithm
     """
-    colnames = List()
     clf = Complex()
     category = RegistryCategories.algorithms
     algorithm = svm.SVC
@@ -36,8 +35,6 @@ class SVMTrain(Task):
     help_text = "Example class to train and predict with SVM."
 
     def train(self, data, target, **kwargs):
-        self.colnames = [t for t in data.columns]
-
         #When doing self.clf =clf , __set__ is called on the field.
         # But, when doing self.clf = self.algorithm() and self.clf.fit(), __set__ is not called.
         # Work around this by doing the fit logic on a local variable, and then assigning to self.clf,
