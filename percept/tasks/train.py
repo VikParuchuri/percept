@@ -39,8 +39,9 @@ class SVMTrain(Task):
         # But, when doing self.clf = self.algorithm() and self.clf.fit(), __set__ is not called.
         # Work around this by doing the fit logic on a local variable, and then assigning to self.clf,
         clf = self.algorithm(**kwargs)
-        clf.fit(data, target)
+        clf = clf.fit(data, target)
         self.clf = clf
+        return self.clf
 
     def predict(self, test_data, **kwargs):
         test_data = test_data
