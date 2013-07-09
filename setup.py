@@ -42,7 +42,7 @@ required = [r for r in required if not r.startswith("-r")]
 
 setup(
     name = "percept",
-    version = "0.12",
+    version = "0.14",
     author = "Equirio",
     author_email = "vik@equirio.com",
     description = "Modular machine learning framework that is easy to test and deploy.",
