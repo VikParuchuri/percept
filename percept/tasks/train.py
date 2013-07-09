@@ -16,7 +16,7 @@ import logging
 
 log = logging.getLogger(__name__)
 
-class SVMTrain(Task):
+class Train(Task):
     """
     A class to train a support vector machine algorithm
     """
