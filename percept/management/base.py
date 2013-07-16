@@ -97,6 +97,9 @@ class LaxOptionParser(OptionParser):
     """
     Parse options in a manner that does not do strict checking
     """
+    def error(self, msg):
+        pass
+
     def _process_args(self, largs, rargs, values):
         """
         Override process_args in OptionParser to avoid returning when arg cannot be processed
@@ -112,7 +115,6 @@ class LaxOptionParser(OptionParser):
                     del rargs[0]
                     raise Exception
             except Exception as e:
-                print e
                 largs.append(arg)
 
 class Management(object):
