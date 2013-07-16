@@ -72,8 +72,12 @@ class WorkflowWrapper(object):
         self.input_file = self.reformat_filepath(config_file, config.get('inputs', 'file'))
         self.input_format = config.get('inputs', 'format')
 
-        self.target_file = self.reformat_filepath(config_file, config.get('targets', 'file'))
-        self.target_format = config.get('targets', 'format')
+        try:
+            self.target_file = self.reformat_filepath(config_file, config.get('targets', 'file'))
+            self.target_format = config.get('targets', 'format')
+        except ConfigParser.NoSectionError:
+            self.target_file = None
+            self.target_format = None
 
         #Tasks is a list, so split by comma
         task_names = config.get('tasks', 'list')
@@ -101,7 +105,11 @@ class WorkflowWrapper(object):
         task_classes = []
         for task in tasks:
             category, namespace, name = task.split(".")
-            cls = find_in_registry(category=category, namespace=namespace, name=name)[0]
+            try:
+                cls = find_in_registry(category=category, namespace=namespace, name=name)[0]
+            except TypeError:
+                log.error("Could not find the task with category.namespace.name {0}".format(task))
+                raise TypeError
             task_classes.append(cls)
         self.tasks = task_classes
 

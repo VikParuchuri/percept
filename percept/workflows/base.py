@@ -104,6 +104,8 @@ class BaseWorkflow(object):
         for task in self.tasks:
             data = self.reformatted_input[task.data_format]['data']
             target = self.reformatted_input[task.data_format]['target']
+            if data is None:
+                raise Exception("Data cannot be none.  Check the config file to make sure the right input is being read.")
             kwargs['data']=data
             kwargs['target']=target
             trained_task = self.execute_train_task_with_dependencies(task, **kwargs)
