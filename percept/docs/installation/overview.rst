@@ -11,7 +11,7 @@ This assumes that you already have git installed on your computer. The main step
 	$ xargs -a apt-packages.txt apt-get install
 	$ virtualenv /path/to/percept
 	$ source /path/to/percept/bin/activate
-	$ pip install -r pre-requirements.txt
+	$ pip install -r pre_requirements.txt
 	$ pip install -r requirements.txt
 
 See :doc:`usage` for usage instructions.
