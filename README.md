@@ -5,7 +5,7 @@ Overview
 ---------------------
 Percept is a modular machine learning framework that allows for easy testing and deployment.
 
-This is licensed under the AGPL, please see LICENSE.txt for details.  The AGPL is used because percept is still under active development.  Alternate licensing is possible; contact vik@equirio.com.
+This is licensed under the Apache license, please see LICENSE.txt and NOTICE.txt for details.  Alternate licensing is possible; contact vik@equirio.com.
 
 Documentation
 ---------------------
