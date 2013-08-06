@@ -5,6 +5,8 @@ Overview
 ---------------------
 Percept is a modular machine learning framework that allows for easy testing and deployment.
 
+A project is broken down into multiple tasks, which are run with a workflow.  Workflows can be stored, manipulated, versioned, and accessed through an ipython shell.  Tasks can be easily tested, chained together, given arguments, and used with dependencies.  Different caching and data translation layers (ie, from the database to a pandas dataframe) can easily be added.  Settings and configuration files allow for quick changes to be made.  Percept tries to strike an optimal balance between development speed and deployability.
+
 This is licensed under the Apache license, please see LICENSE.txt and NOTICE.txt for details.  Alternate licensing is possible; contact vik@equirio.com.
 
 Documentation
