@@ -20,3 +20,8 @@ Run a workflow::
 List available tasks::
 
     $ python manage.py list_tasks --pythonpath=`pwd` --settings=tests.test_settings
+
+Guides
+-----------------------------------
+
+#. `Predicting the NFL Season with Percept <http://vikparuchuri.com/blog/predicting-season-records-for-nfl-teams-part-2/>`_
