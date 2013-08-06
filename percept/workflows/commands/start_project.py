@@ -3,6 +3,8 @@ import os
 from importlib import import_module
 from percept.conf.base import settings
 import re
+import logging
+log = logging.getLogger(__name__)
 
 class Command(BaseCommand):
     args = 'name'
@@ -27,6 +29,8 @@ class Command(BaseCommand):
         prefix_length = len(project_template_dir) + 1
 
         for root, dirs, files in os.walk(project_template_dir):
+            if root==name:
+                continue
             path_end = root[prefix_length:]
             path_end = path_end.replace(settings.PROJECT_TEMPLATE_NAME, name)
             target_dir = os.path.join(project_dir, path_end)

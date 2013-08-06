@@ -9,8 +9,6 @@ There are several important concepts to the percept framework:
 #. Settings
 #. Workflows
 #. Tasks
-#. Inputs
-#. Formatters
 
 
 Settings
@@ -39,14 +37,3 @@ Tasks have the following features:
 #. Tasks can define dependencies, which are executed and provided to the task before it runs.
 #. Tasks can have both a training method and a prediction method.  One can be used to train the classifier or feature extractor, and the other used to perform the same operation on new data.
 #. Tasks can be executed by themselves, or with a workflow.
-
-Inputs
--------------------------------------
-
-Inputs read data in, and pass it to a formatter class.  The data can be from a database, csv file, json file, etc.  Each input defines what kind of values it will read in.
-
-Formatters
--------------------------------------
-
-Formatters reformat input data into data that a task can use.  Formatters define what they convert from (defined by the input class), and what they convert to (defined by the task class).  When a workflow runs, it will inspect its tasks to determine what type of data they accept.  It will then pull the data in using an appropriate input and find the right formatter to convert it.
-
