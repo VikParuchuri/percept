@@ -75,7 +75,7 @@ class Validate(Task):
             self.importances.append(clf.feature_importances_)
         return results, folds
 
-    def train(self, data, target, **kwargs):
+    def train(self, data, **kwargs):
         """
         Used in the training phase.  Override.
         """

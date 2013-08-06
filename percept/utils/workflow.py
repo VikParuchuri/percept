@@ -3,6 +3,7 @@ from percept.conf.base import settings
 from percept.utils.input import import_from_string
 from percept.utils.models import get_task_name
 import ConfigParser
+import os
 
 import logging
 
@@ -67,17 +68,10 @@ class WorkflowWrapper(object):
         #Create a configuration parser and parse config file
         config = ConfigParser.SafeConfigParser()
         config.read(config_file)
+        self.config_file = config_file
 
         #Read values from config file
-        self.input_file = self.reformat_filepath(config_file, config.get('inputs', 'file'))
-        self.input_format = config.get('inputs', 'format')
-
-        try:
-            self.target_file = self.reformat_filepath(config_file, config.get('targets', 'file'))
-            self.target_format = config.get('targets', 'format')
-        except ConfigParser.NoSectionError:
-            self.target_file = None
-            self.target_format = None
+        self.inputs = self.read_section('inputs',config)
 
         #Tasks is a list, so split by comma
         task_names = config.get('tasks', 'list')
@@ -96,6 +90,17 @@ class WorkflowWrapper(object):
 
         self.workflow_loader = WorkflowLoader()
         self.workflow = workflow
+
+    def read_section(self, section_name, config):
+        #Read values from config file
+        data = {}
+        inputs = config.items(section_name)
+        for inp in inputs:
+            value = inp[1]
+            if '../' in inp[1]:
+                value = self.reformat_filepath(self.config_file, value)
+            data.update({inp[0] : value})
+        return data
 
     def setup_tasks(self, tasks):
         """
@@ -118,23 +123,16 @@ class WorkflowWrapper(object):
         Create a workflow
         workflow - a workflow class
         """
-        self.workflow = workflow()
+        self.workflow = workflow(self.inputs)
         self.workflow.tasks = self.tasks
-
-        self.workflow.input_file = self.input_file
-        self.workflow.input_format = self.input_format
-        self.workflow.target_file = self.target_file
-        self.workflow.target_format = self.target_format
         self.workflow.run_id = self.run_id
-
-        self.workflow.setup()
 
     def reformat_filepath(self, config_file, filename):
         """
         Convert relative paths in config file to absolute
         """
         if not filename.startswith("/"):
-            filename = self.config_file_format.format(config_file, filename)
+            filename = os.path.abspath(self.config_file_format.format(config_file, filename))
         return filename
 
     def run(self):

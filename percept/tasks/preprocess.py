@@ -12,8 +12,43 @@ from percept.tests.framework import NormalizationTester
 import os
 from percept.utils.input import DataFormats
 import logging
+from pandas import read_csv
 
 log = logging.getLogger(__name__)
+
+def is_number(n):
+    try:
+        n.astype(float)
+        return True
+    except ValueError:
+        return False
+
+class ReadCSV(Task):
+    data = Complex()
+    target = Complex()
+    help_text = "Example class to read in CSV files."
+    category = RegistryCategories.preprocessors
+
+    def read_data(self, data):
+        for d in data.keys():
+            if "file" in d:
+                name = d.replace("file","")
+                data[name] = self.read_frame(data[d])
+        return data
+
+    def read_frame(self, ifile):
+        df = read_csv(ifile)
+        for i in xrange(0,df.shape[1]):
+            if is_number(df.iloc[:,i]):
+                df.iloc[:,i] = df.iloc[:,i].astype(float)
+        return df
+
+    def train(self,datafile,targetfile,**kwargs):
+        self.data = self.read_frame(datafile)
+        self.target = self.read_frame(targetfile)
+
+    def predict(self, test_data,**kwargs):
+        return self.read_data(test_data)
 
 class Normalize(Task):
     """
@@ -23,7 +58,7 @@ class Normalize(Task):
     column_stdevs = List()
     category = RegistryCategories.preprocessors
     tester = NormalizationTester
-    test_cases = [{'stream' : os.path.abspath(os.path.join(settings.PACKAGE_PATH,'tests/data/csv/1/data.csv')), 'dataformat' : DataFormats.csv}]
+    test_cases = [{'stream' : os.path.abspath(os.path.join(settings.PACKAGE_PATH,'tests/data/csv/1/data.csv'))}]
     data = Complex()
 
     help_text = "Example class to normalize input values."

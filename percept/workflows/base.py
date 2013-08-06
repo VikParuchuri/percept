@@ -9,6 +9,7 @@ from percept.conf.base import settings
 from percept.tests.framework import NaiveWorkflowTester
 import logging
 import os
+import inspect
 
 log = logging.getLogger(__name__)
 
@@ -37,21 +38,16 @@ class BaseWorkflow(object):
     run_id = ""
     help_text = "Base class for workflow.  Do not use directly."
 
-    def __init__(self, **kwargs):
+    def __init__(self, initial_data):
         #initialize runner.  Don't do this at class level to avoid sharing same runner object.
         self.runner = self.runner()
-        self.setup_run = False
-
-    def setup(self):
-        #Reformat input data as needed
-        self.reformatted_input = self.reformat_input()
-        self.setup_run = True
+        self.initial_data = initial_data
 
     def find_dependencies(self, task):
         dependencies = task.dependencies
         return dependencies
 
-    def execute_train_task_with_dependencies(self, task_cls, **kwargs):
+    def execute_train_task_with_dependencies(self, task_cls, data, **kwargs):
         """
         Run the training, as well as any dependencies of the training
         task_cls - class of a task
@@ -70,18 +66,21 @@ class BaseWorkflow(object):
             #Run the dependencies through recursion (in case of dependencies of dependencies, etc)
             for dep in deps:
                 log.info("Dependency {0}".format(get_task_name(dep)))
-                dep_results.append(self.execute_train_task_with_dependencies(dep.cls, **dep.args))
+                dep_results.append(self.execute_train_task_with_dependencies(dep.cls, data, **dep.args))
             trained_dependencies = []
             #Add executed dependency to trained_dependencies list on the task
             for i in xrange(0,len(deps)):
                 dep = deps[i]
-                dep_result = dep_results[i]
                 name = dep.name
                 namespace = dep.namespace
                 category = dep.category
                 trained_dependencies.append(TrainedDependency(category=category, namespace=namespace, name = name, inst = dep))
             task_inst.trained_dependencies = trained_dependencies
         #Finally, run the task
+        task_args = inspect.getargspec(getattr(task_cls,"train")).args
+        for arg in task_args:
+            if arg not in 'self':
+                kwargs.update({arg: data[arg]})
         task_inst.train(**kwargs)
         return task_inst
 
@@ -98,80 +97,27 @@ class BaseWorkflow(object):
         Do the workflow training
         """
         log.info("Starting to train...")
-        if not self.setup_run:
-            self.setup()
         self.trained_tasks = []
-        for task in self.tasks:
-            data = self.reformatted_input[task.data_format]['data']
-            target = self.reformatted_input[task.data_format]['target']
-            if data is None:
-                raise Exception("Data cannot be none.  Check the config file to make sure the right input is being read.")
-            kwargs['data']=data
-            kwargs['target']=target
-            trained_task = self.execute_train_task_with_dependencies(task, **kwargs)
+        self.data = self.initial_data
+        for (i,task) in enumerate(self.tasks):
+            trained_task = self.execute_train_task_with_dependencies(task, self.data, **kwargs)
             self.trained_tasks.append(trained_task)
             #If the trained task alters the data in any way, pass it down the chain to the next task
-            if hasattr(trained_task, 'data'):
-                self.reformatted_input[task.data_format]['data'] = trained_task.data
+            if i<len(self.tasks)-1:
+                task_args = inspect.getargspec(getattr(self.tasks[i+1],"train")).args
+                for arg in task_args:
+                    if hasattr(trained_task, arg) and arg not in 'self':
+                        self.data.update({arg : getattr(trained_task,arg)})
         log.info("Finished training.")
 
     def predict(self, **kwargs):
         """
         Do the workflow prediction (done after training, with new data)
         """
-        reformatted_predict = self.reformat_predict_data()
         results = {}
         for task_inst in self.trained_tasks:
-            predict = reformatted_predict[task_inst.data_format]['predict']
-            kwargs['predict']=predict
-            results.update({get_task_name(task_inst) : self.execute_predict_task(task_inst, predict, **kwargs)})
+            results.update({get_task_name(task_inst) : self.execute_predict_task(task_inst, **self.initial_data)})
         return results
-
-    def find_input(self, input_format):
-        """
-        Find an input class for a given format
-        input_format - see utils.input.dataformats
-        """
-        input_cls = find_needed_input(input_format)
-        return input_cls
-
-    def read_input(self, input_cls, filename, **kwargs):
-        """
-        Read in input and do some minimal preformatting
-        input_cls - the class to use to read the input
-        filename - input filename
-        """
-        input_inst = input_cls()
-        input_inst.read_input(filename)
-        return input_inst.get_data()
-
-    def reformat_file(self, input_file, input_format, output_format):
-        """
-        Reformat input data files to a format the tasks can use
-        """
-        #Return none if input_file or input_format do not exist
-        if input_file is None or input_format is None:
-            return None
-        #Find the needed input class and read the input stream
-        try:
-            input_cls = self.find_input(input_format)
-            input_inst = input_cls()
-        except TypeError:
-            #Return none if input_cls is a Nonetype
-            return None
-        #If the input file cannot be found, return None
-        try:
-            input_inst.read_input(self.absolute_filepath(input_file))
-        except IOError:
-            return None
-
-        formatter = find_needed_formatter(input_format, output_format)
-        if formatter is None:
-            raise Exception("Cannot find a formatter that can convert from {0} to {1}".format(self.input_format, output_format))
-        formatter_inst = formatter()
-        formatter_inst.read_input(input_inst.get_data(), input_format)
-        data = formatter_inst.get_data(output_format)
-        return data
 
     def absolute_filepath(self, input_file):
         """
@@ -179,41 +125,6 @@ class BaseWorkflow(object):
         """
         #abspath needed to avoid relative path issues
         return os.path.abspath(input_file)
-
-    def reformat_predict_data(self, **kwargs):
-        reformatted_predict = {}
-        for output_format in self.needed_formats:
-            reformatted_predict.update(
-                {
-                    output_format :
-                        {
-                            'predict' : self.reformat_file(self.predict_file, self.predict_format, output_format),
-                        }
-                }
-            )
-        return reformatted_predict
-
-    def reformat_input(self, **kwargs):
-        """
-        Reformat input data
-        """
-        reformatted_input = {}
-        needed_formats = []
-        for task_cls in self.tasks:
-            needed_formats.append(task_cls.data_format)
-        self.needed_formats = list(set(needed_formats))
-
-        for output_format in self.needed_formats:
-            reformatted_input.update(
-                {
-                    output_format :
-                        {
-                        'data' : self.reformat_file(self.input_file, self.input_format, output_format),
-                        'target' : self.reformat_file(self.target_file, self.target_format, output_format)
-                        }
-                }
-            )
-        return reformatted_input
 
 class NaiveWorkflow(BaseWorkflow):
     """

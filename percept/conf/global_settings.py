@@ -44,7 +44,6 @@ DO_NOT_COVER = ["conf", "management"]
 
 #Commands are discovered here, and tasks/inputs/formats are imported using only these modules
 INSTALLED_APPS = [
-    'percept.datahandlers',
     'percept.tasks',
     'percept.workflows',
     'percept.tests'
