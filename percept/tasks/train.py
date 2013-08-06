@@ -34,11 +34,10 @@ class Train(Task):
     ]
     help_text = "Example class to train and predict with SVM."
 
-    def train(self, data, **kwargs):
+    def train(self, data, target, **kwargs):
         #When doing self.clf =clf , __set__ is called on the field.
         # But, when doing self.clf = self.algorithm() and self.clf.fit(), __set__ is not called.
         # Work around this by doing the fit logic on a local variable, and then assigning to self.clf,
-        target = kwargs.get('target')
         args = {k : kwargs[k] for k in kwargs if k not in ['target']}
         clf = self.algorithm(**args)
         clf = clf.fit(data, target)

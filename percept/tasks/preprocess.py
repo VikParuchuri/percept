@@ -28,6 +28,7 @@ class ReadCSV(Task):
     target = Complex()
     help_text = "Example class to read in CSV files."
     category = RegistryCategories.preprocessors
+    pass_on = ["data", "target"]
 
     def read_data(self, data):
         for d in data.keys():
@@ -47,8 +48,8 @@ class ReadCSV(Task):
         self.data = self.read_frame(datafile)
         self.target = self.read_frame(targetfile)
 
-    def predict(self, test_data,**kwargs):
-        return self.read_data(test_data)
+    def predict(self, datafile,targetfile,**kwargs):
+        return self.read_frame(datafile)
 
 class Normalize(Task):
     """
@@ -60,6 +61,7 @@ class Normalize(Task):
     tester = NormalizationTester
     test_cases = [{'stream' : os.path.abspath(os.path.join(settings.PACKAGE_PATH,'tests/data/csv/1/data.csv'))}]
     data = Complex()
+    pass_on = ["data"]
 
     help_text = "Example class to normalize input values."
 

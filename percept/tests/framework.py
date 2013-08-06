@@ -79,4 +79,4 @@ class NaiveWorkflowTester(Tester):
         wrapper = WorkflowWrapper(config_file, self.cls)
         wrapper.run()
 
-        assert wrapper.workflow.setup_run == True
+        assert wrapper.workflow.data is not None

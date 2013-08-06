@@ -10,6 +10,7 @@ from percept.tests.framework import NaiveWorkflowTester
 import logging
 import os
 import inspect
+from percept.fields.base import Field
 
 log = logging.getLogger(__name__)
 
@@ -103,11 +104,10 @@ class BaseWorkflow(object):
             trained_task = self.execute_train_task_with_dependencies(task, self.data, **kwargs)
             self.trained_tasks.append(trained_task)
             #If the trained task alters the data in any way, pass it down the chain to the next task
-            if i<len(self.tasks)-1:
-                task_args = inspect.getargspec(getattr(self.tasks[i+1],"train")).args
-                for arg in task_args:
-                    if hasattr(trained_task, arg) and arg not in 'self':
-                        self.data.update({arg : getattr(trained_task,arg)})
+            pass_on_args = getattr(trained_task,"pass_on",None)
+            if pass_on_args is not None:
+                for arg in pass_on_args:
+                    self.data.update({arg : getattr(trained_task,arg)})
         log.info("Finished training.")
 
     def predict(self, **kwargs):
