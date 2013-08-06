@@ -25,3 +25,13 @@ Guides
 -----------------------------------
 
 #. `Predicting the NFL Season with Percept <http://vikparuchuri.com/blog/predicting-season-records-for-nfl-teams-part-2/>`_
+
+Examples
+-----------------------------------
+
+#. `NFL Season <https://github.com/equirio/nfl_season/>`_
+#. `Political Analyzer <https://github.com/VikParuchuri/political-positions/>`_
+#. `Evolve your own music <https://github.com/VikParuchuri/evolve-music/>`_
+#. `Simpsons character analysis <https://github.com/VikParuchuri/simpsons-scripts/>`_
+
+
